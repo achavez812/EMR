@@ -75,7 +75,7 @@
 
 	function communityClick(community_name) {
 		var lang_text = getLang(1);
-		window.location.href = "browse_patients?mode=1&community_name=" + community_name + lang_text;
+		window.location.href = "browse_patients.php?mode=1&community_name=" + community_name + lang_text;
 	}
 
 	function searchPatients() {
