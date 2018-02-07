@@ -1,0 +1,481 @@
+html {
+    background-color: #d7dbe1;
+}
+
+#content {
+    background-color: #d7dbe1;
+    margin-bottom: 20px;
+}
+
+#navigation_header_row {
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 20px;
+    width: 100%; /* Full width */
+}
+
+#navigation_header_col {
+    z-index: 100;
+    overflow: hidden;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #808080;
+    float: left;
+}
+
+#navigation_header_image {
+    float: left;
+}
+
+#navigation_header_span {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 24px;
+    width: 250px;
+    color: #FFFFFF;
+    font-weight: bold;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#navigation_header_menu {
+    position: fixed;
+    right: 0;
+    margin-right: 5px;
+    margin-top: 3px;
+}
+
+
+#navigation_header_bottom_buffer {
+    height: 45px;
+}
+
+#index_content {
+    margin-top: 5px;
+}
+
+
+#back_link {
+    font-size: 20px;
+    text-decoration: underline;
+}
+
+#back_link:hover {
+    cursor: pointer;
+}
+
+li.list-group-item, a.list-group-item {
+    font-size: 20px;
+    background-color: #FFFFFF;
+}
+
+li.list-group-item:hover, a.list-group-item:hover {
+    cursor: pointer;
+    background-color: #ccbea2;
+}
+
+#search_row {
+    margin-bottom: 5px;
+    display: flex;               /* establish flex container */
+    align-items: center;  
+}
+
+#search_input_col {
+
+}
+
+#search_input {
+    width: 100%;
+    font-size: 20px;
+    padding-left: 5px;
+}
+
+#search_icon_col {
+    padding-left: 0px;
+}
+
+#add_patient_icon_col {
+
+}
+
+.icon {
+    margin: 0 auto;
+    display: block;
+}
+
+.input_row {
+    font-size: 20px;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+.input_label {
+    font-weight: bold;
+    margin: 0px;
+}
+
+.input_field {
+    margin-left: 20px;
+    margin-bottom: 0px;
+}
+
+.input_field_text_span {
+    display: block;
+    overflow: hidden;
+    padding-right: 20px;
+}
+
+.input_field[type='text'] {
+    width: 100%;
+}
+
+label {
+    font-weight: normal;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+input[type="radio"]:nth-of-type(2) {
+    margin-left: 20px;
+}
+
+button {
+    margin: 0 auto;
+    display: block;
+}
+
+.consult_button {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    padding: 5px 40px;
+}
+
+#profile_button_row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.fill_button {
+    font-weight: bold;
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+}
+}
+
+#patient_matches_row {
+    padding-bottom: 5px;
+    border-bottom: 2px dashed black;
+}
+
+.center_title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px;
+}
+
+.center_title2 {
+    font-size: 20px;
+    text-align: center;
+    margin: 0px;
+}
+
+.center_title3 {
+    font-size: 16px;
+    text-align: center;
+    margin: 0px;
+}
+
+.center_title4 {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.center_title5 {
+    font-size: 18px;
+    text-align: center;
+    margin: 0px;
+}
+
+.left_title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.left_title2 {
+    font-size: 20px;
+    margin: 0px;
+}
+
+.left_title3 {
+    font-size: 16px;
+    margin: 0px;
+}
+
+.left_title4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.left_title5 {
+    font-size: 18px;
+    margin: 0px;
+}
+
+.list_item1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.list_item2, .list_item3, .list_item4 {
+    font-size: 16px;
+    margin: 0px;
+}
+
+
+/* The side navigation menu */
+.sidenav {
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    right: 0;
+    background-color: #111; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 10px;
+    margin-top: 40px; /* Place content 60px from the top */
+}
+
+/* The navigation menu links */
+.sidenav a {
+    padding: 5px 10px 5px 20px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+#divider_row {
+    padding-bottom: 2px;
+    border-bottom: black solid 2px;
+}
+
+.modal_input_field {
+    font-size: 18px;
+}
+
+textarea {
+    max-height: 140px;
+    min-height: 80px;
+}
+
+.modal-header, .modal-footer, .modal-body {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+div.consult_row li.list-group-item {
+    font-size: 18px;
+}
+
+div.consult_row ul.list-group {
+    margin-bottom: 10px;
+}
+
+#divider_row .left_title {
+    line-height: 24px;
+}
+
+#divider_row .left_title3 {
+    line-height: 20px;
+}
+
+#ready_for_row {
+    font-size: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    margin-bottom: 2px;
+}
+
+#ready_for_col {
+    border: 1px dashed black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#ready_for_label {
+    margin-left: -5px;
+}
+
+#ready_for_select {
+
+}
+
+#ready_for_img {
+    display: inline-block;
+    margin-top: -2px;
+}
+
+#triage_intake_header, #medical_consult_header {
+    margin-bottom: 1px;
+    text-align: center;
+}
+
+.yellow_background {
+    background-color: #FFFF00;
+}
+
+.modal-body .list-group .list-group-item {
+    font-size: 18px;
+    padding: 5px 10px;
+}
+
+.modal-body .input_row {
+    font-size: 18px;
+}
+
+.chief_complaint_label {
+    margin-left: 5px;
+}
+
+#filter_options_row {
+    padding: 5px;
+    border-bottom: 1px dashed black;
+    border-top: 1px dashed black;
+    margin-bottom: 5px;
+}
+
+#filter_options_row .col-xs-4 {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+#filter_options_row button {
+    width: 100%;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.consult_task_completed {
+    width: 24px;
+    height: 24px;
+    float: right;
+}
+
+.modal-dialog a {
+    display:block;
+    text-decoration: underline;
+
+}
+
+li.exam_list_item:hover {
+    background-color: #FFFFFF;
+}
+
+#ready_for_row {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+#ready_for_triage_intake_div {
+}
+
+#ready_for_medical_consult_div {
+}
+
+.ready_for_col {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.ready_for_div {
+    border: 2px solid black;
+    padding: 4px;
+    line-height: 1.2;
+}
+
+
+.selected_button {
+    background-color: #FFFF00;
+    color: #000000;
+}
+
+
+.unselected_button {
+    background-color: #f3f4f6;
+    color: #979797;
+}
+
+.selected_button2 {
+    background-color: #2b5f8f;
+    color: #FFFFFF;
+}
+
+#modal_close_button {
+    padding: 5px 15px;
+}
+
+.filter_col {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.filter_button {
+    border: 2px solid black;
+    padding: 4px;
+    line-height: 1.2;
+}
+
+li.diagnosis_list_item:hover {
+    background-color: #FFFFFF;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+
+.row_upper_margin {
+    margin-top: 10px;
+}
+
+.history_list {
+    margin-bottom: 0px;
+}
+
+select {
+    max-width: 250px;
+}

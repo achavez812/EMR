@@ -1,0 +1,283 @@
+#language_row {
+	margin-top: 20px;
+}
+
+#language_label {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.language_link {
+	font-size: 16px;
+	margin-left: 10px;
+}
+
+.container-fluid {
+	margin-bottom: 10px;
+}
+
+.row1 {
+	margin-bottom: 5px;
+}
+
+.last_row {
+	border-bottom: 2px solid black;
+}
+
+.consult_link_row {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.chief_complaints_row {
+	margin-bottom: 10px;
+	font-size: 20px;
+}
+
+.content_p2 {
+	margin-bottom: 2px;
+	font-weight: bold;
+}
+
+.content_p3 {
+	font-size: 16px;
+	margin-bottom: 2px;
+}
+
+.row1 h1 {
+	font-size: 22px;
+	font-weight: bold;
+	text-decoration: underline;
+	margin-bottom: 5px;
+	margin-top: 10px;
+}
+
+.row1 #header_message {
+	font-size: 20px;
+}
+
+.row2 {
+	margin-bottom: 10px;
+}
+
+.row3 {
+
+}
+
+#search_input_col {
+}
+
+#search_icon_col {
+	padding-left: 0px;
+}
+
+li.list-group-item {
+	font-size: 18px;
+	font-weight: bold;
+	padding: 10px;
+}
+
+.list-group-item:hover {
+	cursor: pointer;
+}
+
+#list_item1 {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0px;
+}
+
+#list_item2, #list_item3 {
+	font-size: 16px;
+	margin: 0px;
+}
+
+a:hover {
+	cursor: pointer;
+}
+
+a.list-group-item: hover {
+
+}
+
+a.list-group-item {
+
+}
+
+
+#search_input {
+	font-size: 20px;
+	padding-left: 5px;
+	width: 100%;
+}
+
+.icon {
+	margin: 0 auto;
+	display: block;
+}
+
+.input_row {
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+.input_row span {
+	font-weight: bold;
+}
+
+.input_field {
+	margin-left: 20px;
+	margin-bottom: 0px;
+}
+
+.other_field {
+	margin-top: 5px;
+}
+
+#community_custom_row {
+	display: none;
+}
+
+input[type="radio"] {
+	margin-left: 20px;
+	margin-right: 5px;
+}
+
+#date_of_birth_row {
+	display: none;
+}
+
+#age_row {
+	display: none;
+}
+
+button {
+	margin: 0 auto;
+	display: block;
+}
+
+.profile_header_p {
+	font-size: 20px;
+	margin-bottom: 2px;
+}
+
+.consult_button {
+	font-size: 20px;
+	margin-top: 10px;
+	margin-bottom: 0px;
+	padding: 5px 40px;
+}
+
+#profile_row1 {
+	margin-bottom: 0px;
+}
+#profile_row2 {
+	border-bottom: 2px solid black;
+}
+
+#edit_button {
+	font-size: 20px;
+	font-weight: bold;
+	position: absolute;
+	right: 0px;
+	padding-right: 15px;
+}
+
+#profile_history_p {
+	text-decoration: underline;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.content_p {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 2px;
+}
+
+.consult_task_completed {
+	width: 24px;
+	height: 24px;
+	float: right;
+}
+
+.consult_section {
+	text-decoration: underline;
+}
+
+.input_label {
+	font-weight: bold;
+	margin: 0px;
+}
+
+label {
+	font-weight: normal;
+}
+
+#custom_chief_complaint_row {
+	display: none;
+}
+
+#primary_chief_complaints_row {
+	margin-bottom: 0px;
+}
+
+#secondary_chief_complaints_row {
+
+}
+
+.list-group {
+	margin-left: 0px;
+	margin-bottom: 5px;
+}
+
+.custom_chief_complaint_input {
+	margin-top: 5px;
+	display: block;
+}
+
+#add_another_a {
+	margin-top: 5px;
+	display: block;
+}
+
+#no_consults_p {
+	font-size: 18px;
+}
+
+.no_entries_p {
+	font-size: 18px;
+}
+
+#name_custom_row {
+	display: none;
+}
+
+#once_section {
+	display: none;
+}
+
+#ongoing_section {
+	display: none;
+}
+
+#illness_notes_row {
+	display: none;
+}
+
+.input_row .normal_span {
+	font-weight: normal;
+}
+
+.no_display {
+	display: none;
+}
+
+#save_button {
+
+}
+
+#delete_button {
+	position: fixed;
+	left: 15px;
+}
