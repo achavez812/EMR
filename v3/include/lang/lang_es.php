@@ -4,9 +4,30 @@
 define("HOME", "Inicio");
 define("TOUCH_HERE", "Toca Aquí");
 
+define("LOGIN", "Login");
+define("USERNAME_FIELD", "Nombre de Usuario:");
+define("PASSWORD_FIELD", "Contraseña:");
+
+define("INVALID_LOGIN", "Login Invalido");
+
+define("NO_USERS_CREATE_ONE", "No hay usuarios. Create un usuario.");
+
 define("LANGUAGE_IDIOMA", "Lang/Idioma");
 define("ENGLISH", "English");
 define("SPANISH", "Español");
+
+define("CANNOT_DELETE_YOURSELF", "No se puede eliminar usted mismo.");
+define("ADD_NEW_USER", "Agregar Nuevo Usuario");
+define("USER_MANAGAMENT", "Gestión de Usuarios");
+define("DEFAULT_CONSULT_INFORMATION", "Información de Consulta Predeterminada");
+define("CONSULT_INFORMATION", "Información de Consulta");
+define("CONSULT_EDIT_CODE", "Consultar Código de Edición");
+define("EDIT_CODE_FIELD", "Código de Edición:");
+
+
+define("IMPORT_EXPORT_DATA", "Importar/Exportar Datos");
+define("EXPORT_DATA", "Exportar Datos");
+define("IMPORT_DATA", "Importar Datos");
 
 define("REGISTRY_BROWSE", "Registro/Explorar");
 define("READY_FOR_TRIAGE_INTAKE", "Listo para Datos Básicos");

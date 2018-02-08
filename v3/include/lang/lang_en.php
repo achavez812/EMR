@@ -3,9 +3,29 @@
 define("HOME", "Home");
 define("TOUCH_HERE", "Touch Here");
 
+define("LOGIN", "Login");
+define("USERNAME_FIELD", "Username:");
+define("PASSWORD_FIELD", "Password:");
+
+define("NO_USERS_CREATE_ONE", "No current users. Create a user.");
+
+define("INVALID_LOGIN", "Invalid Login");
+
 define("LANGUAGE_IDIOMA", "Lang/Idioma");
 define("ENGLISH", "English");
 define("SPANISH", "Español");
+
+define("CANNOT_DELETE_YOURSELF", "Cannot Delete Yourself.");
+define("ADD_NEW_USER", "Add New User");
+define("USER_MANAGAMENT", "User Management");
+define("DEFAULT_CONSULT_INFORMATION", "Default Consult Information");
+define("CONSULT_INFORMATION", "Consult Information");
+define("CONSULT_EDIT_CODE", "Consult Edit Code");
+define("EDIT_CODE_FIELD", "Edit Code:");
+
+define("IMPORT_EXPORT_DATA", "Import/Export Data");
+define("EXPORT_DATA", "Export Data");
+define("IMPORT_DATA", "Import Data");
 
 define("REGISTRY_BROWSE", "Registry/Browse");
 define("READY_FOR_TRIAGE_INTAKE", "Ready for Triage/Intake");

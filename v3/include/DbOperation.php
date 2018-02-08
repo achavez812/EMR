@@ -16,6 +16,66 @@ class DbOperation
         $this->con->close();
     }
 
+    public function usersExist() {
+        $stmt = $this->con->prepare("SELECT id from admin_user");
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+        return $num_rows > 0;
+    }
+
+    public function usernameExists($username) {
+        $stmt = $this->con->prepare("SELECT id from admin_user WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+        return $num_rows > 0;
+    }
+
+    public function getUsers() {
+        $stmt = $this->con->prepare("SELECT * from admin_user");
+        $stmt->execute();
+        $results = $stmt->get_result();
+        $stmt->close();
+        return $results;
+    }
+
+    public function deleteUser($id) {
+        $stmt = $this->con->prepare("DELETE FROM admin_user WHERE id = ?");
+        $stmt->bind_param("s", $id);
+        $result = $stmt->execute();
+        $stmt->close();
+    }
+
+    public function getUserId($username, $password) {
+        $stmt = $this->con->prepare("SELECT id FROM admin_user WHERE username = ? AND password = ?");
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result['id'];
+    }
+
+    public function validateLogin($username, $password) {
+        $stmt = $this->con->prepare("SELECT id FROM admin_user WHERE username = ? AND password = ?");
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+        return $num_rows > 0; 
+    }
+
+    public function createUser($name, $username, $password) {
+        $stmt = $this->con->prepare("INSERT INTO admin_user(name, username, password) values(?, ?, ?)");
+        $stmt->bind_param("sss", $name, $username, $password);
+        $result = $stmt->execute();
+        $stmt->close();
+    }
+
     public function insertBaseCommunities() {
         foreach (BASE_COMMUNITIES as $community_name) {
             $this->createCommunity($community_name);
@@ -27,13 +87,17 @@ class DbOperation
         $existing_medical_groups = $this->getExistingMedicalGroups();
         foreach($existing_medical_groups as $medical_group) {
             $medical_group_name = $medical_group['medical_group'];
-            $inner_array = [];
-            $existing_chief_physicians = $this->getExistingChiefPhysicians($medical_group_name);
-            foreach($existing_chief_physicians as $chief_physician) {
-                $chief_physician_name = $chief_physician['chief_physician'];
-                array_push($inner_array, $chief_physician_name);
+            if(!empty($medical_group_name)) {
+                $inner_array = [];
+                $existing_chief_physicians = $this->getExistingChiefPhysicians($medical_group_name);
+                foreach($existing_chief_physicians as $chief_physician) {
+                    $chief_physician_name = $chief_physician['chief_physician'];
+                    if(!empty($chief_physician_name)) {
+                        array_push($inner_array, $chief_physician_name);
+                    }
+                }
+                $main_array[$medical_group_name] = $inner_array;
             }
-            $main_array[$medical_group_name] = $inner_array;
         }
         return $main_array;
     }
@@ -43,13 +107,17 @@ class DbOperation
         $existing_medical_groups = $this->getExistingMedicalGroups();
         foreach($existing_medical_groups as $medical_group) {
             $medical_group_name = $medical_group['medical_group'];
-            $inner_array = [];
-            $existing_signing_physicians = $this->getExistingSigningPhysicians($medical_group_name);
-            foreach($existing_signing_physicians as $signing_physician) {
-                $signing_physician_name = $signing_physician['signing_physician'];
-                array_push($inner_array, $signing_physician_name);
+            if(!empty($medical_group_name)) {
+                $inner_array = [];
+                $existing_signing_physicians = $this->getExistingSigningPhysicians($medical_group_name);
+                foreach($existing_signing_physicians as $signing_physician) {
+                    $signing_physician_name = $signing_physician['signing_physician'];
+                    if(!empty($signing_physician_name)) {
+                        array_push($inner_array, $signing_physician_name);
+                    }
+                }
+                $main_array[$medical_group_name] = $inner_array;
             }
-            $main_array[$medical_group_name] = $inner_array;
         }
         return $main_array;
     }

@@ -105,7 +105,7 @@
 ?>
 
 <script>
-	var edit_code = <?php echo $edit_code; ?>;
+	var edit_code = <?php echo "'" . $edit_code . "'"; ?>;
 </script>
 
 <div id="mySidenav" class="sidenav">
@@ -659,7 +659,7 @@ function editClick(consult_id, mode) {
 function editSubmitClick(consult_id, mode) {
 	if($("#edit_code_input").val() == edit_code) {
 		var lang_text = getLang(1);
-		window.location.href = "consult_complete.php?edit_code=1234&mode=" + mode + "&consult_id=" + consult_id + lang_text;
+		window.location.href = "consult_complete.php?edit_code=" + edit_code + "&mode=" + mode + "&consult_id=" + consult_id + lang_text;
 	} else {
 		alert(INCORRECT);
 	}

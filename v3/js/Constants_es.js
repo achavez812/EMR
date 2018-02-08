@@ -140,6 +140,10 @@ var EXAMS_MAP = {
 	"139" : "Suicida"
 };
 
+var ADD_NEW_USER_ERROR = "Error. No se puede agregar ese usuario porque ya existe un usuario con ese nombre de usuario.";
+
+var ALERT_INVALID_EDIT_CODE = "Error. Código de Edición necesita tener al menos 6 letras/dígitos.";
+
 var TOUCH_HERE = "Toque Aquí";
 var OTHER = "Otro";
 var OTHER_TREATMENT = "Otro Tratamiento";

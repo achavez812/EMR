@@ -2226,18 +2226,22 @@ var php_group_mapping2 = <?php echo $json_group_mapping2; ?>;
 									echo '<option value="-1">' . TOUCH_HERE . '</option>';
 									foreach($locations as $location_obj) {
 										$location = $location_obj['location'];
-										if($default_consult_location == $location) {
-											$location_match_found = true;
-								    		echo '<option value="' . $location . '" selected>' . $location .'</option>';
-								    	} else {
-								    		echo '<option value="' . $location . '">' . $location .'</option>';
-								    	}
+										if($location) {
+											if($default_consult_location == $location) {
+												$location_match_found = true;
+									    		echo '<option value="' . $location . '" selected>' . $location .'</option>';
+									    	} else {
+									    		echo '<option value="' . $location . '">' . $location .'</option>';
+									    	}
+									    }
 								    }
 								} else {
 									echo '<option value="-1" selected>' . TOUCH_HERE . '</option>';
 									foreach($locations as $location_obj) {
 										$location = $location_obj['location'];
-								    	echo '<option value="' . $location . '">' . $location .'</option>';
+										if($location) {
+								    		echo '<option value="' . $location . '">' . $location .'</option>';
+								    	}
 								    }
 								}
 							?>
@@ -2263,7 +2267,7 @@ var php_group_mapping2 = <?php echo $json_group_mapping2; ?>;
 						<select id="medical_group_select" class="input_field">
 							<?php
 								$medical_group_match_found = false;
-								if($default_consult_medical_group) {
+								if(!empty($default_consult_medical_group)) {
 									echo '<option value="-1">' . TOUCH_HERE . '</option>';
 									foreach($group_mapping as $medical_group => $chief_physicians) {
 										if($default_consult_medical_group == $medical_group) {
@@ -2280,11 +2284,17 @@ var php_group_mapping2 = <?php echo $json_group_mapping2; ?>;
 								    }
 								}
 							?>
-							<option value="-2"><?php echo OTHER; ?></option>
+							<?php
+								if($medical_group_match_found || empty($default_consult_medical_group)) {
+									echo '<option value="-2">' . OTHER . '</option>';
+								} else {
+									echo '<option value="-2" selected>' . OTHER . '</option>';
+								}
+							?>
 						</select>
 						<div id="other_medical_group_div" class="hidden input_field other_field">
 							<?php
-								if($medical_group_match_found || !$default_consult_medical_group) {
+								if($medical_group_match_found || empty($default_consult_medical_group)) {
 									echo '<input id="other_medical_group_input" type="text" placeholder="' . OTHER . '">';
 								} else {
 									echo '<input id="other_medical_group_input" type="text" value="' . $default_consult_medical_group . '">';
