@@ -12,6 +12,108 @@ class DbOperation
         $this->con = $db->connect();
     }
 
+     public function generateUUID() {
+        $data = openssl_random_pseudo_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
+    public function exportData($filename) {
+        exec("mysqldump -h " . DB_HOST . " -u " . DB_USERNAME .  " --password=" . DB_PASSWORD . " " . DB_NAME . " > " . $filename);
+    }
+
+    public function importData($filename) {
+        $maxRuntime = 8; // less then your max script execution limit
+
+        $deadline = time()+$maxRuntime; 
+        $progressFilename = $filename.'_filepointer'; // tmp file for progress
+        $errorFilename = $filename.'_error'; // tmp file for erro
+
+        ($fp = fopen($filename, 'r')) OR die('failed to open file:'.$filename);
+
+        // check for previous error
+        if( file_exists($errorFilename) ){
+            die('<pre> previous error: '.file_get_contents($errorFilename));
+        }
+
+        // activate automatic reload in browser
+        //echo '<html><head> <meta http-equiv="refresh" content="'.($maxRuntime+2).'"><pre>';
+
+        // go to previous file position
+        $filePosition = 0;
+        if( file_exists($progressFilename) ){
+            $filePosition = file_get_contents($progressFilename);
+            fseek($fp, $filePosition);
+        }
+
+        $queryCount = 0;
+        $query = '';
+        echo "<br><br><br>";
+        while( $deadline>time() AND ($line=fgets($fp, 1024000)) ){
+            if(substr($line,0,2)=='--' OR trim($line)=='' ){
+                continue;
+            }
+
+            $query .= $line;
+            if( substr(trim($query),-1)==';' ){
+                
+
+                if(strpos($query, "INSERT INTO") !== false) {
+                    //echo $query . "<br><br>";
+                    $pos1_apos = strpos($query, "`");
+                    $pos2_apos = strpos($query, "`", $pos1_apos + 1);
+                    $table_name_length = $pos2_apos - $pos1_apos - 1;
+
+                    $table_name = substr($query, $pos1_apos + 1, $table_name_length);
+
+                    $pos1_pare = strpos($query, "(");
+                    $pos2_pare = strpos($query, "(", $pos1_pare + 1);
+                    $values_substr = substr(substr($query, $pos2_pare), 0, -2);
+                    $values_array = preg_split("/\),\s\(/", $values_substr);
+
+                    echo $table_name . "<br>";
+                    echo $values_substr . "<br>";
+                    if($values_array) {
+                        print_r($values_array);
+                    } else {
+                        echo "FAILURE";
+                    }
+                    
+
+                }
+                /*
+                if( !mysql_query($query) ){
+                    $error = 'Error performing query \'<strong>' . $query . '\': ' . mysql_error();
+                    file_put_contents($errorFilename, $error."\n");
+                    exit;
+                }
+                */
+                $query = '';
+                file_put_contents($progressFilename, ftell($fp)); // save the current file position for 
+                $queryCount++;
+                
+            }
+        }
+
+        if( feof($fp) ){
+            //header("LOCATION: index.php?lang=" . $lang);
+            fclose($fp);
+            if(unlink($progressFilename)) {
+                echo "Deleted file<br>";
+            } else {
+                echo "NOT Deleted file<br>";
+            }
+            echo 'dump successfully restored!';
+
+        }else{
+            echo ftell($fp).'/'.filesize($filename).' '.(round(ftell($fp)/filesize($filename), 2)*100).'%'."\n";
+            echo $queryCount.' queries processed! please reload or wait for automatic browser refresh!';
+        }
+
+    }
+
     public function close() {
         $this->con->close();
     }
@@ -70,8 +172,13 @@ class DbOperation
     }
 
     public function createUser($name, $username, $password) {
-        $stmt = $this->con->prepare("INSERT INTO admin_user(name, username, password) values(?, ?, ?)");
-        $stmt->bind_param("sss", $name, $username, $password);
+        $name = str_replace("), (", "], [", $name);
+        $username = str_replace("), (", "], [", $username);
+        $password = str_replace("), (", "], [", $password);
+
+        $id = $this->generateUUID();
+        $stmt = $this->con->prepare("INSERT INTO admin_user(id, name, username, password) values(?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $id, $name, $username, $password);
         $result = $stmt->execute();
         $stmt->close();
     }
@@ -183,6 +290,8 @@ class DbOperation
     }
 
     public function updateSettings($field, $value) {
+        $value = str_replace("), (", "], [", $value);
+
         if(!$this->settingsExist()) {
             $this->createSettings();
         }
@@ -193,6 +302,10 @@ class DbOperation
     }
 
     public function updateMainSettings($default_consult_location, $default_consult_medical_group, $default_consult_chief_physician) {
+        $default_consult_location = str_replace("), (", "], [", $default_consult_location);
+        $default_consult_medical_group = str_replace("), (", "], [", $default_consult_medical_group);
+        $default_consult_chief_physician = str_replace("), (", "], [", $default_consult_chief_physician);
+
         if(!$this->settingsExist()) {
             $this->createSettings();
         }
@@ -253,6 +366,8 @@ class DbOperation
     }
 
     public function createCommunity($name) {
+        $name = str_replace("), (", "], [", $name);
+
         if(!$this->CommunityExists($name)) {
             $stmt = $this->con->prepare("INSERT INTO communities(name) values(?)");
             $stmt->bind_param("s", $name);
@@ -345,22 +460,30 @@ class DbOperation
     }
 
     public function createPatient($name, $community_name, $sex, $exact_date_of_birth_known, $date_of_birth, $datetime) {
+        $name = str_replace("), (", "], [", $name);
+        $community_name = str_replace("), (", "], [", $community_name);
+
         $name = trim($name);
         $community_name = trim($community_name);
 
+        $id = $this->generateUUID();
+
         $this->createCommunity($community_name);
-        $stmt = $this->con->prepare("INSERT INTO patients(name, community_name, sex, exact_date_of_birth_known, date_of_birth, datetime_registered, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssss", $name, $community_name, $sex, $exact_date_of_birth_known, $date_of_birth, $datetime, $datetime);
+        $stmt = $this->con->prepare("INSERT INTO patients(id, name, community_name, sex, exact_date_of_birth_known, date_of_birth, datetime_registered, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssss", $id, $name, $community_name, $sex, $exact_date_of_birth_known, $date_of_birth, $datetime, $datetime);
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
-            return $this->con->insert_id;   
+            return $id;   
         } else {
             return INVALID_VALUE;
         }
     }
 
     public function updatePatient($patient_id, $name, $community_name, $sex, $exact_date_of_birth_known, $date_of_birth, $datetime) {
+        $name = str_replace("), (", "], [", $name);
+        $community_name = str_replace("), (", "], [", $community_name);
+
         $name = trim($name);
         $community_name = trim($community_name);
 
@@ -527,17 +650,24 @@ class DbOperation
     }
 
     public function createNewMessage($message_id, $patient_id, $status, $message, $submitter, $datetime) {
+        $message = str_replace("), (", "], [", $message);
+        $submitter = str_replace("), (", "], [", $submitter);
+
         if($this->hasMessage($message_id)) {
             $this->updateMessage($message_id, $status, $message, $submitter, $datetime);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO messages(patient_id, status, message, submitter, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssss", $patient_id, $status, $message, $submitter, $datetime, $datetime);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO messages(id, patient_id, status, message, submitter, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssss", $id, $patient_id, $status, $message, $submitter, $datetime, $datetime);
             $result = $stmt->execute();
             $stmt->close();
         }
     }
 
     public function updateMessage($message_id, $status, $message, $submitter, $datetime) {
+        $message = str_replace("), (", "], [", $message);
+        $submitter = str_replace("), (", "], [", $submitter);
+
         $stmt = $this->con->prepare("UPDATE messages SET status = ?, message = ?, submitter = ?, datetime_last_updated = ? WHERE id = ?");
         $stmt->bind_param("sssss", $status, $message, $submitter, $datetime, $message_id);
         $result = $stmt->execute();
@@ -569,13 +699,12 @@ class DbOperation
                 $chief_physician = $settings[SETTINGS_DEFAULT_CONSULT_CHIEF_PHYSICIAN];
             }
 
-
-            $stmt = $this->con->prepare("INSERT INTO consults(patient_id, datetime_started, status, location, medical_group, chief_physician) values(?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssss", $patient_id, $current_datetime, $status, $location, $medical_group, $chief_physician);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO consults(id, patient_id, datetime_started, status, location, medical_group, chief_physician) values(?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssss", $id, $patient_id, $current_datetime, $status, $location, $medical_group, $chief_physician);
             $result = $stmt->execute();
             $stmt->close();
             if ($result) {
-                $id = $this->con->insert_id;
                 $this->updatePatientConsultStatus($patient_id, $status, $current_datetime);
                 return $id;  
             } else {
@@ -604,6 +733,12 @@ class DbOperation
     }
 
     public function updateConsult($consult_id, $medical_group, $chief_physician, $signing_physician, $location, $notes, $datetime_completed) {
+        $medical_group = str_replace("), (", "], [", $medical_group);
+        $chief_physician = str_replace("), (", "], [", $chief_physician);
+        $signing_physician = str_replace("), (", "], [", $signing_physician);
+        $location = str_replace("), (", "], [", $location);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE consults SET medical_group = ?, chief_physician = ?, signing_physician = ?, location = ?, notes = ?, datetime_completed = ? WHERE id = ?");
         $stmt->bind_param("sssssss", $medical_group, $chief_physician, $signing_physician, $location, $notes, $datetime_completed, $consult_id);
         $result = $stmt->execute();
@@ -771,6 +906,8 @@ class DbOperation
     }
 
     public function createChiefComplaints($patient_id, $current_consult_status, $consult_id, $type, $text) {
+        $text = str_replace("), (", "], [", $text);
+
         if($text) {
             if($current_consult_status == CONSULT_STATUS_READY_FOR_TRIAGE_PENDING) {
                 $this->updateConsultStatus($patient_id, $consult_id, CONSULT_STATUS_READY_FOR_TRIAGE_IN_PROGRESS);
@@ -787,15 +924,20 @@ class DbOperation
     }
 
     public function createChiefComplaint($consult_id, $selected_value, $custom_text, $type) {
+        $custom_text = str_replace("), (", "], [", $custom_text);
+
         if(!$this->hasMatchingChiefComplaint($consult_id, $selected_value, $custom_text, $type)) {
-            $stmt = $this->con->prepare("INSERT INTO chief_complaints(consult_id, selected_value, custom_text, type) values(?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $consult_id, $selected_value, $custom_text, $type);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO chief_complaints(id, consult_id, selected_value, custom_text, type) values(?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $id, $consult_id, $selected_value, $custom_text, $type);
             $result = $stmt->execute();
             $stmt->close();
         }
     }
 
     public function updateCustomChiefComplaint($chief_complaint_id, $custom_text) {
+        $custom_text = str_replace("), (", "], [", $custom_text);
+
         $stmt = $this->con->prepare("UPDATE chief_complaints SET custom_text = ? WHERE id = ?");
         $stmt->bind_param("ss", $custom_text, $chief_complaint_id);
         $result = $stmt->execute();
@@ -923,28 +1065,53 @@ class DbOperation
     }
 
     public function createGeneralHPI($chief_complaint_id, $consult_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes) {
+        $o_how = str_replace("), (", "], [", $o_how);
+        $o_cause = str_replace("), (", "], [", $o_cause);
+        $p_provocation = str_replace("), (", "], [", $p_provocation);
+        $p_palliation = str_replace("), (", "], [", $p_palliation);
+        $q_type = str_replace("), (", "], [", $q_type);
+        $r_region_main = str_replace("), (", "], [", $r_region_main);
+        $r_region_radiates = str_replace("), (", "], [", $r_region_radiates);
+        $t_begin_time = str_replace("), (", "], [", $t_begin_time);
+        $notes = str_replace("), (", "], [", $notes);
+
         if($this->hasMatchingGeneralHPI($chief_complaint_id)) {
             $this->updateGeneralHPI($chief_complaint_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO hpi_general(chief_complaint_id, consult_id, o_how, o_cause, p_provocation, p_palliation, q_type, r_region_main, r_region_radiates, s_level, t_begin_time, t_before, t_current, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssssssssssss", $chief_complaint_id, $consult_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO hpi_general(id, chief_complaint_id, consult_id, o_how, o_cause, p_provocation, p_palliation, q_type, r_region_main, r_region_radiates, s_level, t_begin_time, t_before, t_current, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssssssssssss", $id, $chief_complaint_id, $consult_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes);
             $result = $stmt->execute();
             $stmt->close();
         }
     }
 
     public function createPregnancyHPI($chief_complaint_id, $consult_id, $num_weeks_pregnant, $receiving_prenatal_care, $taking_prenatal_vitamins, $received_ultrasound, $num_live_births, $num_miscarriages, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes) {
+        $complications_notes = str_replace("), (", "], [", $complications_notes);
+        $notes = str_replace("), (", "], [", $notes);
+
         if($this->hasMatchingPregnancyHPI($chief_complaint_id)) {
             $this->updatePregnancyHPI($chief_complaint_id, $num_weeks_pregnant, $receiving_prenatal_care, $received_ultrasound, $num_live_births, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO hpi_pregnancy(chief_complaint_id, consult_id, num_weeks_pregnant, receiving_prenatal_care, taking_prenatal_vitamins, received_ultrasound, num_live_births, num_miscarriages, dysuria_urgency_frequency, abnormal_vaginal_discharge, vaginal_bleeding, previous_pregnancy_complications, complications_notes, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssssssssssss", $chief_complaint_id, $consult_id, $num_weeks_pregnant, $receiving_prenatal_care, $taking_prenatal_vitamins, $received_ultrasound, $num_live_births, $num_miscarriages, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO hpi_pregnancy(id, chief_complaint_id, consult_id, num_weeks_pregnant, receiving_prenatal_care, taking_prenatal_vitamins, received_ultrasound, num_live_births, num_miscarriages, dysuria_urgency_frequency, abnormal_vaginal_discharge, vaginal_bleeding, previous_pregnancy_complications, complications_notes, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssssssssssss", $id, $chief_complaint_id, $consult_id, $num_weeks_pregnant, $receiving_prenatal_care, $taking_prenatal_vitamins, $received_ultrasound, $num_live_births, $num_miscarriages, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes);
             $stmt->execute();
             $stmt->close();
         }
     }
 
     public function updateGeneralHPI($chief_complaint_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes) {
+        $o_how = str_replace("), (", "], [", $o_how);
+        $o_cause = str_replace("), (", "], [", $o_cause);
+        $p_provocation = str_replace("), (", "], [", $p_provocation);
+        $p_palliation = str_replace("), (", "], [", $p_palliation);
+        $q_type = str_replace("), (", "], [", $q_type);
+        $r_region_main = str_replace("), (", "], [", $r_region_main);
+        $r_region_radiates = str_replace("), (", "], [", $r_region_radiates);
+        $t_begin_time = str_replace("), (", "], [", $t_begin_time);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE hpi_general SET o_how = ?, o_cause = ?, p_provocation = ?, p_palliation = ?, q_type = ?, r_region_main = ?, r_region_radiates = ?, s_level = ?, t_begin_time = ?, t_before = ?, t_current = ?, notes = ? WHERE chief_complaint_id = ?");
         $stmt->bind_param("sssssssssssss", $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes, $chief_complaint_id);
         $result = $stmt->execute();
@@ -952,7 +1119,10 @@ class DbOperation
     }
 
     public function updatePregnancyHPI($chief_complaint_id, $num_weeks_pregnant, $receiving_prenatal_care, $taking_prenatal_vitamins, $received_ultrasound, $num_live_births, $num_miscarriages, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes) {
-         $stmt = $this->con->prepare("UPDATE hpi_pregnancy SET num_weeks_pregnant = ?, receiving_prenatal_care = ?, taking_prenatal_vitamins = ?, received_ultrasound = ?, num_live_births = ?, num_miscarriages = ?, dysuria_urgency_frequency = ?, abnormal_vaginal_discharge = ?, vaginal_bleeding = ?, previous_pregnancy_complications = ?, complications_notes = ?, notes = ? WHERE chief_complaint_id = ?");
+        $complications_notes = str_replace("), (", "], [", $complications_notes);
+        $notes = str_replace("), (", "], [", $notes);
+
+        $stmt = $this->con->prepare("UPDATE hpi_pregnancy SET num_weeks_pregnant = ?, receiving_prenatal_care = ?, taking_prenatal_vitamins = ?, received_ultrasound = ?, num_live_births = ?, num_miscarriages = ?, dysuria_urgency_frequency = ?, abnormal_vaginal_discharge = ?, vaginal_bleeding = ?, previous_pregnancy_complications = ?, complications_notes = ?, notes = ? WHERE chief_complaint_id = ?");
         $stmt->bind_param("sssssssssssss", $num_weeks_pregnant, $receiving_prenatal_care, $taking_prenatal_vitamins, $received_ultrasound, $num_live_births, $num_miscarriages, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes, $chief_complaint_id);
         $result = $stmt->execute();
         $stmt->close();
@@ -1057,12 +1227,14 @@ class DbOperation
     }
 
     public function createMeasurements($patient_id, $current_consult_status, $consult_id, $is_pregnant, $date_last_menstruation, $temperature_units, $temperature_value, $blood_pressure_systolic, $blood_pressure_diastolic, $pulse_rate, $blood_oxygen_saturation, $respiration_rate, $height_units, $height_value, $weight_units, $weight_value, $waist_circumference_units, $waist_circumference_value, $notes) {
+        $notes = str_replace("), (", "], [", $notes);
 
         if($this->consultHasMeasurements($consult_id)) {
             $this->updateMeasurements($consult_id, $is_pregnant, $date_last_menstruation, $temperature_units, $temperature_value, $blood_pressure_systolic, $blood_pressure_diastolic, $pulse_rate, $blood_oxygen_saturation, $respiration_rate, $height_units, $height_value, $weight_units, $weight_value, $waist_circumference_units, $waist_circumference_value, $notes);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO measurements(consult_id, is_pregnant, date_last_menstruation, temperature_units, temperature_value, blood_pressure_systolic, blood_pressure_diastolic, pulse_rate, blood_oxygen_saturation, respiration_rate, height_units, height_value, weight_units, weight_value, waist_circumference_units, waist_circumference_value, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssssssssssss", $consult_id, $is_pregnant, $date_last_menstruation, $temperature_units, $temperature_value, $blood_pressure_systolic, $blood_pressure_diastolic, $pulse_rate, $blood_oxygen_saturation, $respiration_rate, $height_units, $height_value, $weight_units, $weight_value, $waist_circumference_units, $waist_circumference_value, $notes);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO measurements(id, consult_id, is_pregnant, date_last_menstruation, temperature_units, temperature_value, blood_pressure_systolic, blood_pressure_diastolic, pulse_rate, blood_oxygen_saturation, respiration_rate, height_units, height_value, weight_units, weight_value, waist_circumference_units, waist_circumference_value, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssssssssssss", $id, $consult_id, $is_pregnant, $date_last_menstruation, $temperature_units, $temperature_value, $blood_pressure_systolic, $blood_pressure_diastolic, $pulse_rate, $blood_oxygen_saturation, $respiration_rate, $height_units, $height_value, $weight_units, $weight_value, $waist_circumference_units, $waist_circumference_value, $notes);
             $stmt->execute();
             $stmt->close();
 
@@ -1073,6 +1245,8 @@ class DbOperation
     }
 
     public function updateMeasurements($consult_id, $is_pregnant, $date_last_menstruation, $temperature_units, $temperature_value, $blood_pressure_systolic, $blood_pressure_diastolic, $pulse_rate, $blood_oxygen_saturation, $respiration_rate, $height_units, $height_value, $weight_units, $weight_value, $waist_circumference_units, $waist_circumference_value, $notes) {
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE measurements SET is_pregnant = ?, date_last_menstruation = ?, temperature_units = ?, temperature_value = ?, blood_pressure_systolic = ?, blood_pressure_diastolic = ?, pulse_rate = ?, blood_oxygen_saturation = ?, respiration_rate = ?, height_units = ?, height_value = ?, weight_units = ?, weight_value = ?, waist_circumference_units = ?, waist_circumference_value = ?, notes = ? WHERE consult_id = ?");
         $stmt->bind_param("sssssssssssssssss", $is_pregnant, $date_last_menstruation, $temperature_units, $temperature_value, $blood_pressure_systolic, $blood_pressure_diastolic, $pulse_rate, $blood_oxygen_saturation, $respiration_rate, $height_units, $height_value, $weight_units, $weight_value, $waist_circumference_units, $waist_circumference_value, $notes, $consult_id);
         $result = $stmt->execute();
@@ -1112,6 +1286,10 @@ class DbOperation
     }
 
     public function createExam($consult_id, $patient_id, $current_consult_status, $is_normal, $main_category, $arg1, $arg2, $arg3, $arg4, $information, $options, $other_option, $notes) {
+        $information = str_replace("), (", "], [", $information);
+        $other_option = str_replace("), (", "], [", $other_option);
+        $notes = str_replace("), (", "], [", $notes);
+
         if($this->hasMatchingExam($consult_id, $is_normal, $main_category, $arg1, $arg2, $arg3, $arg4)) {
             if($is_normal == BOOLEAN_TRUE) {
                 if(!$options) {
@@ -1130,8 +1308,9 @@ class DbOperation
                 //FIGURE THIS OUT
             }
         } else {
-            $stmt = $this->con->prepare("INSERT INTO exams(consult_id, is_normal, main_category, arg1, arg2, arg3, arg4, information, options, other_option, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssssss", $consult_id, $is_normal, $main_category, $arg1, $arg2, $arg3, $arg4, $information, $options, $other_option, $notes);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO exams(id, consult_id, is_normal, main_category, arg1, arg2, arg3, arg4, information, options, other_option, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssssss", $id, $consult_id, $is_normal, $main_category, $arg1, $arg2, $arg3, $arg4, $information, $options, $other_option, $notes);
             $stmt->execute();
             $stmt->close();
 
@@ -1261,6 +1440,10 @@ class DbOperation
 
     public function updateExam($exam_id, $consult_id, $is_normal, $main_category, $arg1, $arg2, $arg3, $arg4, $information, $options, $other_option, $notes) {
         $stmt = $this->con->prepare("UPDATE exams SET is_normal = ?, main_category = ?, arg1 = ?, arg2 = ?, arg3 = ?, arg4 = ?, information = ?, options = ?, other_option = ?, notes = ? WHERE id = ?");
+        $information = str_replace("), (", "], [", $information);
+        $other_option = str_replace("), (", "], [", $other_option);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt->bind_param("sssssssssss", $is_normal, $main_category, $arg1, $arg2, $arg3, $arg4, $information, $options, $other_option, $notes, $exam_id);
         $result = $stmt->execute();
         $stmt->close();
@@ -1376,10 +1559,14 @@ class DbOperation
     }
 
     public function createDiagnosis($patient_id, $consult_id, $current_consult_status, $is_chronic, $category, $type, $other, $notes) {
+        $other = str_replace("), (", "], [", $other);
+        $notes = str_replace("), (", "], [", $notes);
+
         $history_show = BOOLEAN_TRUE;
         $date = Utilities::getCurrentDateTime();
-        $stmt = $this->con->prepare("INSERT INTO diagnoses_conditions_illnesses(patient_id, consult_id, is_chronic, category, type, other, notes, datetime_created, datetime_last_updated, history_show) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssss", $patient_id, $consult_id, $is_chronic, $category, $type, $other, $notes, $date, $date, $history_show);
+        $id = $this->generateUUID();
+        $stmt = $this->con->prepare("INSERT INTO diagnoses_conditions_illnesses(id, patient_id, consult_id, is_chronic, category, type, other, notes, datetime_created, datetime_last_updated, history_show) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssssss", $id, $patient_id, $consult_id, $is_chronic, $category, $type, $other, $notes, $date, $date, $history_show);
         $stmt->execute();
         $stmt->close();
 
@@ -1389,6 +1576,9 @@ class DbOperation
     }
 
     public function updateDiagnosis($diagnosis_id, $is_chronic, $other, $notes) {
+        $other = str_replace("), (", "], [", $other);
+        $notes = str_replace("), (", "], [", $notes);
+
         $date = Utilities::getCurrentDateTime();
         $stmt = $this->con->prepare("UPDATE diagnoses_conditions_illnesses SET is_chronic = ?, other = ?, notes = ?, datetime_last_updated = ? WHERE id = ?");
         $stmt->bind_param("sssss", $is_chronic, $other, $notes, $date, $diagnosis_id);
@@ -1457,8 +1647,20 @@ class DbOperation
     }
 
     public function createTreatment($current_consult_status, $patient_id, $consult_id, $diagnosis_id, $type, $other, $strength, $strength_units, $strength_units_other, $conc_part_one, $conc_part_one_units, $conc_part_one_units_other, $conc_part_two, $conc_part_two_units, $conc_part_two_units_other, $quantity, $quantity_units, $quantity_units_other, $route, $route_other, $prn, $dosage, $dosage_units, $dosage_units_other, $frequency, $frequency_other, $duration, $duration_units, $duration_units_other, $notes, $add_to_medication_history) {
-        $stmt = $this->con->prepare("INSERT INTO treatments(consult_id, diagnosis_id, type, other, strength, strength_units, strength_units_other, conc_part_one, conc_part_one_units, conc_part_one_units_other, conc_part_two, conc_part_two_units, conc_part_two_units_other, quantity, quantity_units, quantity_units_other, route, route_other, prn, dosage, dosage_units, dosage_units_other, frequency, frequency_other, duration, duration_units, duration_units_other, notes, add_to_medication_history) value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssssssssssssssssssssssssss", $consult_id, $diagnosis_id, $type, $other, $strength, $strength_units, $strength_units_other, $conc_part_one, $conc_part_one_units, $conc_part_one_units_other, $conc_part_two, $conc_part_two_units, $conc_part_two_units_other, $quantity, $quantity_units, $quantity_units_other, $route, $route_other, $prn, $dosage, $dosage_units, $dosage_units_other, $frequency, $frequency_other, $duration, $duration_units, $duration_units_other, $notes, $add_to_medication_history);
+        $other = str_replace("), (", "], [", $other);
+        $strength_units_other = str_replace("), (", "], [", $strength_units_other);
+        $conc_part_one_units_other = str_replace("), (", "], [", $conc_part_one_units_other);
+        $conc_part_two_units_other = str_replace("), (", "], [", $conc_part_two_units_other);
+        $quantity_units_other = str_replace("), (", "], [", $quantity_units_other);
+        $route_other = str_replace("), (", "], [", $route_other);
+        $dosage_units_other = str_replace("), (", "], [", $dosage_units_other);
+        $frequency_other = str_replace("), (", "], [", $frequency_other);
+        $duration_units_other = str_replace("), (", "], [", $duration_units_other);
+        $notes = str_replace("), (", "], [", $notes);
+
+        $id = $this->generateUUID();
+        $stmt = $this->con->prepare("INSERT INTO treatments(id, consult_id, diagnosis_id, type, other, strength, strength_units, strength_units_other, conc_part_one, conc_part_one_units, conc_part_one_units_other, conc_part_two, conc_part_two_units, conc_part_two_units_other, quantity, quantity_units, quantity_units_other, route, route_other, prn, dosage, dosage_units, dosage_units_other, frequency, frequency_other, duration, duration_units, duration_units_other, notes, add_to_medication_history) value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssssssssssssssssssssssss", $id, $consult_id, $diagnosis_id, $type, $other, $strength, $strength_units, $strength_units_other, $conc_part_one, $conc_part_one_units, $conc_part_one_units_other, $conc_part_two, $conc_part_two_units, $conc_part_two_units_other, $quantity, $quantity_units, $quantity_units_other, $route, $route_other, $prn, $dosage, $dosage_units, $dosage_units_other, $frequency, $frequency_other, $duration, $duration_units, $duration_units_other, $notes, $add_to_medication_history);
         $result = $stmt->execute();
         $stmt->close();
 
@@ -1473,6 +1675,9 @@ class DbOperation
     }
 
     public function addMedicationHistory($patient_id, $consult_id, $type, $other, $notes) {
+        $other = str_replace("), (", "], [", $other);
+        $notes = str_replace("), (", "], [", $notes);
+
         $start_date = Utilities::getCurrentDate();
         $end_date = NULL;
         $current_datetime = Utilities::getCurrentDateTime();
@@ -1497,6 +1702,17 @@ class DbOperation
     }
 
     public function updateTreatment($patient_id, $consult_id, $treatment_id, $type, $other, $strength, $strength_units, $strength_units_other, $conc_part_one, $conc_part_one_units, $conc_part_one_units_other, $conc_part_two, $conc_part_two_units, $conc_part_two_units_other, $quantity, $quantity_units, $quantity_units_other, $route, $route_other, $prn, $dosage, $dosage_units, $dosage_units_other, $frequency, $frequency_other, $duration, $duration_units, $duration_units_other, $notes, $add_to_medication_history) {
+        $other = str_replace("), (", "], [", $other);
+        $strength_units_other = str_replace("), (", "], [", $strength_units_other);
+        $conc_part_one_units_other = str_replace("), (", "], [", $conc_part_one_units_other);
+        $conc_part_two_units_other = str_replace("), (", "], [", $conc_part_two_units_other);
+        $quantity_units_other = str_replace("), (", "], [", $quantity_units_other);
+        $route_other = str_replace("), (", "], [", $route_other);
+        $dosage_units_other = str_replace("), (", "], [", $dosage_units_other);
+        $frequency_other = str_replace("), (", "], [", $frequency_other);
+        $duration_units_other = str_replace("), (", "], [", $duration_units_other);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE treatments SET other = ?, strength = ?, strength_units = ?, strength_units_other = ?, conc_part_one = ?, conc_part_one_units = ?, conc_part_one_units_other = ?, conc_part_two = ?, conc_part_two_units = ?, conc_part_two_units_other = ?, quantity = ?, quantity_units = ?, quantity_units_other = ?, route = ?, route_other = ?, prn = ?, dosage = ?, dosage_units = ?, dosage_units_other = ?, frequency = ?, frequency_other = ?, duration = ?, duration_units = ?, duration_units_other = ?, notes = ?, add_to_medication_history = ? WHERE id = ?");
         $stmt->bind_param("sssssssssssssssssssssssssss", $other, $strength, $strength_units, $strength_units_other, $conc_part_one, $conc_part_one_units, $conc_part_one_units_other, $conc_part_two, $conc_part_two_units, $conc_part_two_units_other, $quantity, $quantity_units, $quantity_units_other, $route, $route_other, $prn, $dosage, $dosage_units, $dosage_units_other, $frequency, $frequency_other, $duration, $duration_units, $duration_units_other, $notes, $add_to_medication_history, $treatment_id);
         $result = $stmt->execute();
@@ -1577,11 +1793,16 @@ class DbOperation
     }
 
     public function createFollowup($patient_id, $current_consult_status, $consult_id, $is_needed, $is_type_custom, $type, $is_reason_custom, $reason, $notes) {
+        $type = str_replace("), (", "], [", $type);
+        $reason = str_replace("), (", "], [", $reason);
+        $notes = str_replace("), (", "], [", $notes);
+
         if($this->hasExistingFollowup($consult_id)) {
             return $this->updateExistingFollowup($consult_id, $is_needed, $is_type_custom, $type, $is_reason_custom, $reason, $notes);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO followups(consult_id, is_needed, is_type_custom, type, is_reason_custom, reason, notes) value(?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssss", $consult_id, $is_needed, $is_type_custom, $type, $is_reason_custom, $reason, $notes);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO followups(id, consult_id, is_needed, is_type_custom, type, is_reason_custom, reason, notes) value(?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssss", $id, $consult_id, $is_needed, $is_type_custom, $type, $is_reason_custom, $reason, $notes);
             $result = $stmt->execute();
             $stmt->close();
             if($current_consult_status == CONSULT_STATUS_READY_FOR_MEDICAL_CONSULT_PENDING) {
@@ -1591,6 +1812,10 @@ class DbOperation
     }
 
     public function updateExistingFollowup($consult_id, $is_needed, $is_type_custom, $type, $is_reason_custom, $reason, $notes) {
+        $type = str_replace("), (", "], [", $type);
+        $reason = str_replace("), (", "], [", $reason);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE followups SET is_needed = ?, is_type_custom = ?, type = ?, is_reason_custom = ?, reason = ?, notes = ? WHERE consult_id = ?");
         $stmt->bind_param("sssssss", $is_needed, $is_type_custom, $type, $is_reason_custom, $reason, $notes, $consult_id);
         $result = $stmt->execute();
@@ -1648,6 +1873,9 @@ class DbOperation
 
     //HISTORY STUFF BELOW
     public function createNewHistoryAllergy($patient_id, $allergy_id, $name, $notes, $date) {
+        $name = str_replace("), (", "], [", $name);
+        $notes = str_replace("), (", "], [", $notes);
+
         if ($this->hasExistingHistoryAllergy($allergy_id)) {
             return $this->updateHistoryAllergy($allergy_id, $name, $notes, $date);
         } else {
@@ -1657,8 +1885,9 @@ class DbOperation
                 $result = $stmt->execute();
                 $stmt->close();
             }
-            $stmt = $this->con->prepare("INSERT INTO history_allergies(patient_id, name, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $patient_id, $name, $notes, $date, $date);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO history_allergies(id, patient_id, name, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssss", $id, $patient_id, $name, $notes, $date, $date);
             $result = $stmt->execute();
             $stmt->close();
             if ($result) {
@@ -1670,6 +1899,9 @@ class DbOperation
     }
 
     public function updateHistoryAllergy($allergy_id, $name, $notes, $date) {
+        $name = str_replace("), (", "], [", $name);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE history_allergies SET name = ?, notes = ?, datetime_last_updated = ? WHERE id = ?");
         $stmt->bind_param("ssss", $name, $notes, $date, $allergy_id);
         $result = $stmt->execute();
@@ -1727,11 +1959,15 @@ class DbOperation
     }
 
       public function createNewHistoryIllness($patient_id, $illness_id, $is_chronic, $type, $other, $start_date, $end_date, $notes, $datetime) {
+        $other = str_replace("), (", "], [", $other);
+        $notes = str_replace("), (", "], [", $notes);
+
         if ($this->hasExistingHistoryIllness($illness_id)) {
             return $this->updateHistoryIllness($illness_id, $is_chronic, $type, $other, $start_date, $end_date, $notes, $datetime);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO diagnoses_conditions_illnesses(patient_id, is_chronic, type, other, start_date, end_date, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssss", $patient_id, $is_chronic, $type, $other, $start_date, $end_date, $notes, $datetime, $datetime);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO diagnoses_conditions_illnesses(id, patient_id, is_chronic, type, other, start_date, end_date, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssss", $id, $patient_id, $is_chronic, $type, $other, $start_date, $end_date, $notes, $datetime, $datetime);
             $result = $stmt->execute();
             $stmt->close();
             if ($result) {
@@ -1743,6 +1979,9 @@ class DbOperation
     }
 
     public function updateHistoryIllness($illness_id, $is_chronic, $type, $other, $start_date, $end_date, $notes, $datetime) {
+        $other = str_replace("), (", "], [", $other);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE diagnoses_conditions_illnesses SET is_chronic = ?, type = ?, other = ?, start_date = ?, end_date = ?, notes = ?, datetime_last_updated = ? WHERE id = ?");
         $stmt->bind_param("ssssssss", $is_chronic, $type, $other, $start_date, $end_date, $notes, $datetime, $illness_id);
         $result = $stmt->execute();
@@ -1794,11 +2033,15 @@ class DbOperation
     }
 
     public function createNewHistorySurgery($patient_id, $surgery_id, $is_name_custom, $name, $date, $notes, $datetime) {
+        $name = str_replace("), (", "], [", $name);
+        $notes = str_replace("), (", "], [", $notes);
+
         if ($this->hasExistingHistorySurgery($surgery_id)) {
             return $this->updateHistorySurgery($surgery_id, $is_name_custom, $name, $date, $notes, $datetime);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO history_surgeries(patient_id, is_name_custom, name, date, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssss", $patient_id, $is_name_custom, $name, $date, $notes, $datetime, $datetime);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO history_surgeries(id, patient_id, is_name_custom, name, date, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssss", $id, $patient_id, $is_name_custom, $name, $date, $notes, $datetime, $datetime);
             $result = $stmt->execute();
             $stmt->close();
             if ($result) {
@@ -1810,6 +2053,9 @@ class DbOperation
     }
 
     public function updateHistorySurgery($surgery_id, $is_name_custom, $name, $date, $notes, $datetime) {
+        $name = str_replace("), (", "], [", $name);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE history_surgeries SET is_name_custom = ?, name = ?, date = ?, notes = ?, datetime_last_updated = ? WHERE id = ?");
         $stmt->bind_param("ssssss", $is_name_custom, $name, $date, $notes, $datetime, $surgery_id);
         $result = $stmt->execute();
@@ -1857,11 +2103,15 @@ class DbOperation
     }
 
     public function createNewHistoryMedication($patient_id, $consult_id, $medication_id, $name, $start_date, $end_date, $source, $notes, $datetime) {
+        $name = str_replace("), (", "], [", $name);
+        $notes = str_replace("), (", "], [", $notes);
+
         if ($this->hasExistingHistoryMedication($medication_id)) {
             return $this->updateHistoryMedication($medication_id, $name, $start_date, $end_date, $source, $notes, $datetime);
         } else {
-            $stmt = $this->con->prepare("INSERT INTO history_medications(patient_id, consult_id, name, start_date, end_date, source, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssss", $patient_id, $consult_id, $name, $start_date, $end_date, $source, $notes, $datetime, $datetime);
+            $id = $this->generateUUID();
+            $stmt = $this->con->prepare("INSERT INTO history_medications(id, patient_id, consult_id, name, start_date, end_date, source, notes, datetime_created, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssss", $id, $patient_id, $consult_id, $name, $start_date, $end_date, $source, $notes, $datetime, $datetime);
             $result = $stmt->execute();
             $stmt->close();
             if ($result) {
@@ -1873,6 +2123,9 @@ class DbOperation
     }
 
     public function updateHistoryMedication($medication_id, $name, $start_date, $end_date, $source, $notes, $datetime_last_updated) {
+        $name = str_replace("), (", "], [", $name);
+        $notes = str_replace("), (", "], [", $notes);
+
         $stmt = $this->con->prepare("UPDATE history_medications SET name = ?, start_date = ?, end_date = ?, source = ?, notes = ?, datetime_last_updated = ? WHERE id = ?");
         $stmt->bind_param("sssssss", $name, $start_date, $end_date, $is_self_reported, $notes, $datetime_last_updated, $medication_id);
         $result = $stmt->execute();

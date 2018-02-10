@@ -26,6 +26,10 @@ define("EDIT_CODE_FIELD", "Edit Code:");
 define("IMPORT_EXPORT_DATA", "Import/Export Data");
 define("EXPORT_DATA", "Export Data");
 define("IMPORT_DATA", "Import Data");
+define("SELECT_AN_IMPORT_FILE", "Select an Import File");
+define("IMPORT_DIRECTORY_DOES_NOT_EXIST", "Error: Import Directory Does not Exist.");
+define("NO_VALID_FILES_IN_IMPORT_DIRECTORY", "There are no .sql files in the import directory.");
+define("EXPORT_FILENAME_FIELD", "Export Filename:");
 
 define("REGISTRY_BROWSE", "Registry/Browse");
 define("READY_FOR_TRIAGE_INTAKE", "Ready for Triage/Intake");

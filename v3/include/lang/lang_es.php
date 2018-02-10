@@ -28,6 +28,11 @@ define("EDIT_CODE_FIELD", "Código de Edición:");
 define("IMPORT_EXPORT_DATA", "Importar/Exportar Datos");
 define("EXPORT_DATA", "Exportar Datos");
 define("IMPORT_DATA", "Importar Datos");
+define("SELECT_AN_IMPORT_FILE", "Selecciona un archivo para importar.");
+define("IMPORT_DIRECTORY_DOES_NOT_EXIST", "Error: La carpeta de importación no existe..");
+define("NO_VALID_FILES_IN_IMPORT_DIRECTORY", "No hay archivos de .sql en la carpeta de importación.");
+define("EXPORT_FILENAME_FIELD", "Nombre del archivo de exportación:");
+
 
 define("REGISTRY_BROWSE", "Registro/Explorar");
 define("READY_FOR_TRIAGE_INTAKE", "Listo para Datos Básicos");

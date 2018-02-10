@@ -4,7 +4,6 @@
 
 <?php
 	require_once 'include/include.php';
-
 	if(isset($_GET['show_alert'])) {
 		$show_alert = $_GET['show_alert'];
 		if($show_alert == 2) {

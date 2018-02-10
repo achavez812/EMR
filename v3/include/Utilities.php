@@ -7,6 +7,12 @@ class Utilities {
 
 	}
 
+    function endsWith($haystack, $needle) {
+        $length = strlen($needle);
+
+        return $length === 0 || (substr($haystack, -$length) === $needle);
+    }
+
     public static function isAssoc($arr){
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
