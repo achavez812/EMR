@@ -156,7 +156,7 @@
 	    	$datetime_started = $consult["datetime_started"];
 	    	$status = $consult['status'];
 
-	    	$temp_consult_id = "'" . $consult_id . "'";
+	    	$temp_consult_id = '"' . $consult_id . '"';
 
 	    	$line1_text = Utilities::formatDateForDisplay($datetime_started);
 	    	$line2_text = "";

@@ -113,7 +113,7 @@
 				}
 				$datetime = Utilities::getCurrentDateTime();
 
-				$db->createNewHistoryMedication($patient_id, $medication_id, $name, $start_date, $end_date, $source, $notes, $datetime);
+				$db->createNewHistoryMedication($patient_id, NULL, $medication_id, $name, $start_date, $end_date, $source, $notes, $datetime);
 			}
 			header("LOCATION: history.php?patient_id=" . $patient_id . "&mode=" . $mode . "&lang=" . $lang);
 		}
@@ -189,7 +189,7 @@
 			<p class="left_title"><?php echo ALLERGIES; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addAllergy(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="images/add.png" alt="Add" onclick="addAllergy(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 
@@ -203,7 +203,7 @@
 				if($no_reported_information_allergies) {
 					$no_reported_information_allergies = false;
 					$name = $allergy['name'];
-					if($name === NULL) {
+					if(empty($name)) {
 						$nkda = true;
 						break;
 					} else {
@@ -237,7 +237,7 @@
 			<p class="left_title"><?php echo ILLNESSES_CONDITIONS; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addIllnessCondition(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="images/add.png" alt="Add" onclick="addIllnessCondition(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 
@@ -307,7 +307,7 @@
 			<p class="left_title"><?php echo SURGERIES; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addSurgery(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="images/add.png" alt="Add" onclick="addSurgery(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 
@@ -359,7 +359,7 @@
 			<p class="left_title"><?php echo MEDICATIONS; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addMedication(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="images/add.png" alt="Add" onclick="addMedication(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 

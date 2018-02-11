@@ -732,6 +732,7 @@
 
 	$temp_patient_id = "'" . $patient_id . "'";
 	$temp_consult_id = "'" . $consult_id . "'";
+	$temp_consult_id2 = '"' . $consult_id . '"';
 ?>
 
 <div id="mySidenav" class="sidenav">
@@ -793,11 +794,11 @@
 			<ul class="list-group">
 				<li class="list-group-item" onclick="chiefComplaintClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo CHIEF_COMPLAINT_HPI; ?>
-					<?php if($db->consultHasChiefComplaint($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
+					<?php if($db->consultHasChiefComplaint($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark.png"/>'; } ?>
 				</li>
 				<li class="list-group-item" onclick="vitalSignsMeasurementsClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo VITALS_MEASUREMENTS; ?>
-					<?php if($db->consultHasMeasurements($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
+					<?php if($db->consultHasMeasurements($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark.png"/>'; } ?>
 				</li>
 			</ul>
 		</div>
@@ -813,19 +814,19 @@
 			<ul class="list-group">
 				<li class="list-group-item" onclick="examsClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo EXAMS; ?>
-					<?php if($db->consultHasExam($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
+					<?php if($db->consultHasExam($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark.png"/>'; } ?>
 				</li>
 				<li class="list-group-item" onclick="diagnosisClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo DIAGNOSIS; ?>
-					<?php if($db->consultHasDiagnosis($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
+					<?php if($db->consultHasDiagnosis($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark.png"/>'; } ?>
 				</li>
 				<li class="list-group-item" onclick="treatmentClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo TREATMENT; ?>
-					<?php if($db->consultHasTreatment($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>	
+					<?php if($db->consultHasTreatment($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark.png"/>'; } ?>	
 				</li>
 				<li class="list-group-item" onclick="followupClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo FOLLOWUP; ?>
-					<?php if($db->consultHasFollowup($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>	
+					<?php if($db->consultHasFollowup($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark.png"/>'; } ?>	
 				</li>
 				<li class="list-group-item" onclick="signAndCompleteClick(<?php echo $temp_consult_id . ', ' . $mode;?>);"><?php echo SIGN_AND_COMPLETE; ?></li>
 			</ul>
@@ -942,14 +943,14 @@ if($show_consult_option == SHOW_CHIEF_COMPLAINT) {
 	  						if($selected_value == INVALID_CHIEF_COMPLAINT) {
 	  							echo '<li class="list-group-item" onclick="existingChiefComplaintClick(\'' . $mode . '\', \'' . $consult_id . '\', \'' . $selected_value . '\', \'' . $custom_text . '\', \'' . CHIEF_COMPLAINT_PRIMARY . '\', \'' . $type . '\', \'' . $chief_complaint_id . '\', \'' . $hpi_field1 . '\', \'' . $hpi_field2 . '\', \'' . $hpi_field3 . '\', \'' . $hpi_field4 . '\', \'' . $hpi_field5 . '\', \'' . $hpi_field6 . '\', \'' . $hpi_field7 . '\', \'' . $hpi_field8 . '\', \'' . $hpi_field9 . '\', \'' . $hpi_field10 . '\', \'' . $hpi_field11 . '\', \'' . $hpi_field12 . '\');">' . $custom_text;
 	  							if($has_match) {
-	  								echo '<img class="consult_task_completed" src="images/checkmark"/>';
+	  								echo '<img class="consult_task_completed" src="images/checkmark.png"/>';
 	  							}
 	  							echo '</li>';
 	  						} else {
 	  							$label = Utilities::getChiefComplaintLabel($selected_value);
 	  							echo '<li class="list-group-item" onclick="existingChiefComplaintClick(\'' . $mode . '\', \'' . $consult_id . '\', \'' . $selected_value . '\', \'' . $label . '\', \'' . CHIEF_COMPLAINT_PRIMARY . '\', \'' . $type . '\', \'' . $chief_complaint_id . '\', \'' . $hpi_field1 . '\', \'' . $hpi_field2 . '\', \'' . $hpi_field3 . '\', \'' . $hpi_field4 . '\', \'' . $hpi_field5 . '\', \'' . $hpi_field6 . '\', \'' . $hpi_field7 . '\', \'' . $hpi_field8 . '\', \'' . $hpi_field9 . '\', \'' . $hpi_field10 . '\', \'' . $hpi_field11 . '\', \'' . $hpi_field12 . '\');">' . $label;
 	  							if($has_match) {
-	  								echo '<img class="consult_task_completed" src="images/checkmark"/>';
+	  								echo '<img class="consult_task_completed" src="images/checkmark.png"/>';
 	  							}
 	  							echo '</li>';
 	  						}
@@ -1052,14 +1053,14 @@ if($show_consult_option == SHOW_CHIEF_COMPLAINT) {
 	  						if($selected_value == INVALID_CHIEF_COMPLAINT) {
 	  							echo '<li class="list-group-item" onclick="existingChiefComplaintClick(\'' . $mode . '\', \'' . $consult_id . '\', \'' . $selected_value . '\', \'' . $custom_text . '\', \'' . CHIEF_COMPLAINT_SECONDARY . '\', \'' . $type . '\', \'' . $chief_complaint_id . '\', \'' . $hpi_field1 . '\', \'' . $hpi_field2 . '\', \'' . $hpi_field3 . '\', \'' . $hpi_field4 . '\', \'' . $hpi_field5 . '\', \'' . $hpi_field6 . '\', \'' . $hpi_field7 . '\', \'' . $hpi_field8 . '\', \'' . $hpi_field9 . '\', \'' . $hpi_field10 . '\', \'' . $hpi_field11 . '\', \'' . $hpi_field12 . '\');">' . $custom_text;
 	  							if($has_match) {
-	  								echo '<img class="consult_task_completed" src="images/checkmark"/>';
+	  								echo '<img class="consult_task_completed" src="images/checkmark.png"/>';
 	  							}
 	  							echo '</li>';
 	  						} else {
 	  							$label = Utilities::getChiefComplaintLabel($selected_value);
 	  							echo '<li class="list-group-item" onclick="existingChiefComplaintClick(\'' . $mode . '\', \'' . $consult_id . '\', \'' . $selected_value . '\', \'' . $label . '\', \'' . CHIEF_COMPLAINT_SECONDARY . '\', \'' . $type . '\', \'' . $chief_complaint_id . '\', \'' . $hpi_field1 . '\', \'' . $hpi_field2 . '\', \'' . $hpi_field3 . '\', \'' . $hpi_field4 . '\', \'' . $hpi_field5 . '\', \'' . $hpi_field6 . '\', \'' . $hpi_field7 . '\', \'' . $hpi_field8 . '\', \'' . $hpi_field9 . '\', \'' . $hpi_field10 . '\', \'' . $hpi_field11 . '\', \'' . $hpi_field12 . '\');">' . $label;
 	  							if($has_match) {
-	  								echo '<img class="consult_task_completed" src="images/checkmark"/>';
+	  								echo '<img class="consult_task_completed" src="images/checkmark.png"/>';
 	  							}
 	  							echo '</li>';
 	  						}
@@ -1712,13 +1713,13 @@ Page 3: Within a category, other option (Can go back to Page 1 or Page 2)
 	      	</div>
 		    <div id="modal_diagnoses" class="modal-body">
 		    	<div id="diagnosis_header_stuff">
-		    		<a id="diagnosisPage1Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 1, ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
+		    		<a id="diagnosisPage1Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id2 . ', ' . $mode . ', 1, ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
 			    	<p id="diagnosisPage1P" class="left_title5 hidden"><?php echo MAIN_OPTIONS; ?></p>
 				    
-			    	<a id="diagnosisPage2Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 2, ""'; ?>);'><?php echo CATEGORIES; ?></a>
+			    	<a id="diagnosisPage2Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id2 . ', ' . $mode . ', 2, ""'; ?>);'><?php echo CATEGORIES; ?></a>
 				    <p id="diagnosisPage2P" class="left_title5 hidden"><?php echo CATEGORIES; ?></p>
 				    
-				    <a id="diagnosisPage3Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 3, ""'; ?>);'><?php echo CATEGORIES; ?></a>
+				    <a id="diagnosisPage3Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id2 . ', ' . $mode . ', 3, ""'; ?>);'><?php echo CATEGORIES; ?></a>
 				    <p id="diagnosisPage3P" class="left_title5 hidden"></p>
 				</div>
 		    	<ul id="diagnosis_list" class="list-group"></ul>
@@ -1794,10 +1795,10 @@ var php_treatments = <?php echo $json_treatments; ?>;
 	      	</div>
 		    <div id="modal_treatment" class="modal-body">
 		    	<div id="treatment_header_stuff">
-		    		<a id="treatmentPage1Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 1, "", ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
+		    		<a id="treatmentPage1Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $temp_consult_id2 . ', ' . $mode . ', 1, "", ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
 			    	<p id="treatmentPage1P" class="left_title5 hidden"><?php echo MAIN_OPTIONS; ?></p>
 				    
-			    	<a id="treatmentPage2Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 2, "", ""'; ?>);'><?php echo CATEGORIES; ?></a>
+			    	<a id="treatmentPage2Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $temp_consult_id2 . ', ' . $mode . ', 2, "", ""'; ?>);'><?php echo CATEGORIES; ?></a>
 				    <p id="treatmentPage2P" class="left_title5 hidden"></p>
 				    
 				    <p id="treatmentPage3P" class="left_title5 hidden"></p>
@@ -1982,7 +1983,7 @@ if($show_consult_option == SHOW_FOLLOWUP) {
 	$json_type_array = json_encode(FOLLOWUP_TYPE_ARRAY, JSON_HEX_TAG);
 	$json_followup_map = json_encode(FOLLOWUP_REASON_MAP, JSON_HEX_TAG);
 
-
+	$temp_followup_id = "'" . $followup_id . "'";
 
 ?>
 

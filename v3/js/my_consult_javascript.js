@@ -1109,6 +1109,7 @@ function examsLoad(consult_id, mode, consult_option) {
 }
 
 function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
+	var temp_consult_id = "\"" + consult_id + "\"";
 	var new_arg1 = arg1;
 	var new_arg2 = arg2;
 	var new_arg3 = arg3;
@@ -1200,7 +1201,7 @@ function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
 			var header_element1 = "<p class='exam_header left_title5'>" + EXAMS_MAP[arg1] + "</p>";
 			$(header_element1).insertBefore("#exam_list");
 		} else if ((arg2 == "" && custom) || (arg3 == "" && !custom)) {
-			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
+			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
 			$(header_element1).insertBefore("#exam_list");
 
 			/*
@@ -1214,8 +1215,8 @@ function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
 				$(header_element2).insertBefore("#exam_list");
 			} 
 		} else if ((arg3 == "" && custom) || (arg4 == "" && !custom)) {
-			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
-			var header_element2 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg2] + "</a>";
+			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
+			var header_element2 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg2] + "</a>";
 			$(header_element1).insertBefore("#exam_list");
 			$(header_element2).insertBefore("#exam_list");
 
@@ -1230,9 +1231,9 @@ function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
 				$(header_element3).insertBefore("#exam_list");
 			}
 		} else if ((arg4 == "" && custom) || (arg5 == "" && !custom)) {
-			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
-			var header_element2 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg2] + "</a>";
-			var header_element3 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg3] + "</a>";
+			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
+			var header_element2 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg2] + "</a>";
+			var header_element3 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg3] + "</a>";
 			$(header_element1).insertBefore("#exam_list");
 			$(header_element2).insertBefore("#exam_list");
 			$(header_element3).insertBefore("#exam_list");
@@ -1248,10 +1249,10 @@ function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
 				$(header_element4).insertBefore("#exam_list");
 			}
 		} else {
-			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
-			var header_element2 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg2] + "</a>";
-			var header_element3 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg3] + "</a>";
-			var header_element4 = "<a class='exam_header left_title5' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + arg4 + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg4] + "</a>";
+			var header_element1 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg1] + "</a>";
+			var header_element2 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg2] + "</a>";
+			var header_element3 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg3] + "</a>";
+			var header_element4 = "<a class='exam_header left_title5' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + arg4 + "\", \"" + "\", \"" + "\");'>" + EXAMS_MAP[arg4] + "</a>";
 			$(header_element1).insertBefore("#exam_list");
 			$(header_element2).insertBefore("#exam_list");
 			$(header_element3).insertBefore("#exam_list");
@@ -1391,13 +1392,13 @@ function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
 	    		temp2_arg5 = EXAMS_OTHER_CHOICE;
 	    	}
 	    	var mark_type = determineMark(arg1, arg2, arg3, arg4, arg5);
-			var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + temp1_arg1 + "\", \"" + temp1_arg2 + "\", \"" + temp1_arg3 + "\", \"" + temp1_arg4 + "\", \"" + temp1_arg5 + "\", \"" + "\");'>" + NORMAL_CAPS;
+			var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + temp1_arg1 + "\", \"" + temp1_arg2 + "\", \"" + temp1_arg3 + "\", \"" + temp1_arg4 + "\", \"" + temp1_arg5 + "\", \"" + "\");'>" + NORMAL_CAPS;
 
 			if (mark_type == 2) {
-	    		element += '<img class="consult_task_completed" src="images/checkmark"/>';
+	    		element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 	    		/*
 	    		if(mark_type == 1) {
-	    			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+	    			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 	    		} else if (mark_type == 2) {
 	    			element += NORMAL_IN_PARANTHESES;
 	    		} else if (mark_type == 3) {
@@ -1426,13 +1427,13 @@ function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
 
 
 
-		    	var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + new_arg1 + "\", \"" + new_arg2 + "\", \"" + new_arg3 + "\", \"" + new_arg4 + "\", \"" + new_arg5 + "\", \"" + "\");'>" + EXAMS_MAP[key];
+		    	var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + new_arg1 + "\", \"" + new_arg2 + "\", \"" + new_arg3 + "\", \"" + new_arg4 + "\", \"" + new_arg5 + "\", \"" + "\");'>" + EXAMS_MAP[key];
 
 		    	if (mark_type > 0) {
-		    		element += '<img class="consult_task_completed" src="images/checkmark"/>';
+		    		element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 		    		/*
 		    		if(mark_type == 1) {
-		    			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+		    			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 		    		} else if (mark_type == 2) {
 		    			element += NORMAL_IN_PARANTHESES;
 		    		} else if (mark_type == 3) {
@@ -1453,12 +1454,12 @@ function examMapClick(consult_id, mode, arg1, arg2, arg3, arg4, arg5, custom) {
 		for(var custom_exam_i = 0; custom_exam_i < custom_exams.length; custom_exam_i++) {
 			var custom_exam = custom_exams[custom_exam_i];
 			var information = custom_exam[6];
-			var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + arg4 + "\", \"" + arg5 + "\", \"" + information + "\");'>" + information + '<img class="consult_task_completed" src="images/checkmark"/>' + "</li>";
+			var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + arg1 + "\", \"" + arg2 + "\", \"" + arg3 + "\", \"" + arg4 + "\", \"" + arg5 + "\", \"" + information + "\");'>" + information + '<img class="consult_task_completed" src="images/checkmark.png"/>' + "</li>";
 			$("#exam_list").append(element);
 		}
 
 		if (arg1 != "") {
-			var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + consult_id + ", " + mode + ", \"" + temp2_arg1 + "\", \"" + temp2_arg2 + "\", \"" + temp2_arg3 + "\", \"" + temp2_arg4 + "\", \"" + temp2_arg5 + "\", \"" + "\");'>" + OTHER + "</li>";
+			var element = "<li class='exam_list_item list-group-item' onclick='examMapClick(" + temp_consult_id + ", " + mode + ", \"" + temp2_arg1 + "\", \"" + temp2_arg2 + "\", \"" + temp2_arg3 + "\", \"" + temp2_arg4 + "\", \"" + temp2_arg5 + "\", \"" + "\");'>" + OTHER + "</li>";
 			$("#exam_list").append(element);
 		}
 	}
@@ -1901,6 +1902,7 @@ function diagnosesLoad(consult_id, mode, consult_option) {
 }
 
 function diagnosesPageClick(consult_id, mode, page, category) {
+	var temp_consult_id = '\'' + consult_id + '\'';
 	$("#diagnoses_delete_button").addClass("hidden");
 	$("#diagnoses_save_button").addClass("hidden");
 
@@ -1925,9 +1927,9 @@ function diagnosesPageClick(consult_id, mode, page, category) {
 		num_marks_on_page1 += getNumCustomDiagnoses("");
 
 
-		var element = '<li id="diagnoses_option_full_list" class="diagnosis_list_item list-group-item" onclick="diagnosesPageClick(' + consult_id + ', ' + mode + ', ' + '2' + ', \'\');">' + CATEGORIES_MORE_OPTIONS;
+		var element = '<li id="diagnoses_option_full_list" class="diagnosis_list_item list-group-item" onclick="diagnosesPageClick(' + temp_consult_id + ', ' + mode + ', ' + '2' + ', \'\');">' + CATEGORIES_MORE_OPTIONS;
 		if(num_marks_on_page1 < getNumDiagnoses()) {
-			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 		}
 		element += '</li>';
 		$("#diagnosis_list").append(element);
@@ -1936,9 +1938,9 @@ function diagnosesPageClick(consult_id, mode, page, category) {
 			var main_option = php_main_options[main_options_i];
 			var text = DIAGNOSIS_MAPPING[main_option];
 
-			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + consult_id + ', ' + mode + ', ' + main_option + ', ' + '1' + ', \'\', \'\');">' + text;
+			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + temp_consult_id + ', ' + mode + ', ' + main_option + ', ' + '1' + ', \'\', \'\');">' + text;
 			if(optionHasDiagnosis(main_option)) {
-				element += '<img class="consult_task_completed" src="images/checkmark"/>';
+				element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			}
 			element += '</li>';
 			$("#diagnosis_list").append(element);
@@ -1949,13 +1951,13 @@ function diagnosesPageClick(consult_id, mode, page, category) {
 			var custom_diagnosis = custom_diagnoses[custom_diagnosis_i];
 			var text = custom_diagnosis[4];
 
-			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + consult_id + ', ' + mode + ', \'\', ' + '1' + ', \'\', \'' + text + '\');">' + text;
-			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + temp_consult_id + ', ' + mode + ', \'\', ' + '1' + ', \'\', \'' + text + '\');">' + text;
+			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			element += '</li>';
 			$("#diagnosis_list").append(element);
 		}
 		 
-		element = '<li id="diagnoses_option_other" class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + consult_id + ', ' + mode + ', ' + '-1, ' + '1' + ', \'\', \'\');">' + OTHER + '</li>';
+		element = '<li id="diagnoses_option_other" class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + temp_consult_id + ', ' + mode + ', ' + '-1, ' + '1' + ', \'\', \'\');">' + OTHER + '</li>';
 		$("#diagnosis_list").append(element);
 	} else if (page == 2) {
 		$("#diagnosisPage1P").addClass("hidden");
@@ -1970,9 +1972,9 @@ function diagnosesPageClick(consult_id, mode, page, category) {
 		for(var key in php_full_map) {
 			var category = DIAGNOSIS_MAPPING[key];
 
-			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosesPageClick(' + consult_id + ', ' + mode + ', ' + '3' + ', ' + key + ');">' + category;
+			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosesPageClick(' + temp_consult_id + ', ' + mode + ', ' + '3' + ', ' + key + ');">' + category;
 			if(categoryHasDiagnosis(key)) {
-				element += '<img class="consult_task_completed" src="images/checkmark"/>';
+				element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			}
 			element += '</li>';
 			$("#diagnosis_list").append(element);
@@ -1996,9 +1998,9 @@ function diagnosesPageClick(consult_id, mode, page, category) {
 		for (var i = 0; i < options.length; i++) {
 			var main_option = options[i];
 			var text = DIAGNOSIS_MAPPING[main_option];
-			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + consult_id + ', ' + mode + ', ' + main_option + ', ' + '3' + ', ' + category + ', \'\');">' + text;
+			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + temp_consult_id + ', ' + mode + ', ' + main_option + ', ' + '3' + ', ' + category + ', \'\');">' + text;
 			if(optionHasDiagnosis(main_option)) {
-				element += '<img class="consult_task_completed" src="images/checkmark"/>';
+				element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			}
 			element += '</li>';
 			$("#diagnosis_list").append(element);
@@ -2009,13 +2011,13 @@ function diagnosesPageClick(consult_id, mode, page, category) {
 			var custom_diagnosis = custom_diagnoses[custom_diagnosis_i];
 			var text = custom_diagnosis[4];
 
-			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + consult_id + ', ' + mode + ', \'\', ' + '3' + ', ' + category + ', \'' + text + '\');">' + text;
-			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+			element = '<li class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + temp_consult_id + ', ' + mode + ', \'\', ' + '3' + ', ' + category + ', \'' + text + '\');">' + text;
+			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			element += '</li>';
 			$("#diagnosis_list").append(element);
 		}
 		 
-		element = '<li id="diagnoses_option_other" class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + consult_id + ', ' + mode + ', ' + '-1, ' + '3' + ', ' + category + ', \'\');">' + OTHER + '</li>';
+		element = '<li id="diagnoses_option_other" class="diagnosis_list_item list-group-item" onclick="diagnosisItemClick(' + temp_consult_id + ', ' + mode + ', ' + '-1, ' + '3' + ', ' + category + ', \'\');">' + OTHER + '</li>';
 		$("#diagnosis_list").append(element);
 	}
 }
@@ -2323,7 +2325,7 @@ function treatmentLoad(consult_id, mode, consult_option) {
 }
 
 function treatmentPageClick(consult_id, mode, page, diagnosis_id, option, diagnosis_text) {
-	console.log(php_diagnoses.length);
+	var temp_consult_id = '\'' + consult_id + '\'';
 	$("#treatment_delete_button").addClass("hidden");
 	$("#treatment_save_button").addClass("hidden");
 
@@ -2341,9 +2343,9 @@ function treatmentPageClick(consult_id, mode, page, diagnosis_id, option, diagno
 		$("#treatmentPage3P").addClass("hidden");
 
 		//GENERAL TREATMENTS
-		var element = '<li id="treatment_general_list" class="treatment_list_item list-group-item" onclick="treatmentPageClick(' + consult_id + ', ' + mode + ', ' + '2' + ', \'\', \'\', \'\');">' + GENERAL_TREATMENTS;
+		var element = '<li id="treatment_general_list" class="treatment_list_item list-group-item" onclick="treatmentPageClick(' + temp_consult_id + ', ' + mode + ', ' + '2' + ', \'\', \'\', \'\');">' + GENERAL_TREATMENTS;
 		if(diagnosisHasTreatment("")) {
-			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 		}
 		element += '</li>';
 		$("#treatment_list").append(element);
@@ -2361,9 +2363,9 @@ function treatmentPageClick(consult_id, mode, page, diagnosis_id, option, diagno
 				option = "\'\'";
 			}
 			
-			var element = '<li class="treatment_list_item list-group-item" onclick="treatmentPageClick(' + consult_id + ', ' + mode + ', ' + '2' + ', ' + id + ', ' + option + ', \'' + text + '\');">' + text;
+			var element = '<li class="treatment_list_item list-group-item" onclick="treatmentPageClick(' + temp_consult_id + ', ' + mode + ', ' + '2' + ', \'' + id + '\', ' + option + ', \'' + text + '\');">' + text;
 			if(diagnosisHasTreatment(id)) {
-				element += '<img class="consult_task_completed" src="images/checkmark"/>';
+				element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			}
 			element += '</li>';
 			$("#treatment_list").append(element);
@@ -2393,9 +2395,7 @@ function treatmentPageClick(consult_id, mode, page, diagnosis_id, option, diagno
 		}  
 
 		var diagnosis_id_arg = diagnosis_id;
-		if(!diagnosis_id) {
-			diagnosis_id = "\'\'";
-		}
+
 		if(!option) {
 			option = "\'\'";
 		}
@@ -2409,9 +2409,9 @@ function treatmentPageClick(consult_id, mode, page, diagnosis_id, option, diagno
 				console.log(diagnosis_id_arg + " : " + treatment_option);
 				treatment_id = (getTreatment1(diagnosis_id_arg, treatment_option))[0];
 			}
-			var element = '<li class="treatment_list_item list-group-item" onclick="treatmentItemClick(' + consult_id + ', ' + mode + ', ' + diagnosis_id + ', ' + option + ', \'' + diagnosis_text + '\', ' + treatment_option + ', \'' + treatment_id + '\');">' + treatment_text;
+			var element = '<li class="treatment_list_item list-group-item" onclick="treatmentItemClick(' + temp_consult_id + ', ' + mode + ', \'' + diagnosis_id + '\', ' + option + ', \'' + diagnosis_text + '\', ' + treatment_option + ', \'' + treatment_id + '\');">' + treatment_text;
 			if(treatment_id) {
-				element += '<img class="consult_task_completed" src="images/checkmark"/>';
+				element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			}
 			element += '</li>';
 			$("#treatment_list").append(element);
@@ -2423,8 +2423,8 @@ function treatmentPageClick(consult_id, mode, page, diagnosis_id, option, diagno
 			var custom_treatment = custom_treatments[i];
 			var id = custom_treatment[0];
 			var other = custom_treatment[3];
-			var element = '<li class="treatment_list_item list-group-item" onclick="treatmentItemClick(' + consult_id + ', ' + mode + ', ' + diagnosis_id + ', ' + option + ', \'' + diagnosis_text + '\', \'\', \'' + id + '\');">' + other;
-			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+			var element = '<li class="treatment_list_item list-group-item" onclick="treatmentItemClick(' + temp_consult_id + ', ' + mode + ', \'' + diagnosis_id + '\', ' + option + ', \'' + diagnosis_text + '\', \'\', \'' + id + '\');">' + other;
+			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 			
 			element += '</li>';
 			$("#treatment_list").append(element);
@@ -2434,9 +2434,9 @@ function treatmentPageClick(consult_id, mode, page, diagnosis_id, option, diagno
 
 
 
-		var element = '<li class="treatment_list_item list-group-item" onclick="treatmentItemClick(' + consult_id + ', ' + mode + ', ' + diagnosis_id + ', ' + option + ', \'' + diagnosis_text + '\', ' + '-1, \'\'' + ');">' + OTHER_TREATMENT;
+		var element = '<li class="treatment_list_item list-group-item" onclick="treatmentItemClick(' + temp_consult_id + ', ' + mode + ', \'' + diagnosis_id + '\', ' + option + ', \'' + diagnosis_text + '\', ' + '-1, \'\'' + ');">' + OTHER_TREATMENT;
 		if(false) {
-			element += '<img class="consult_task_completed" src="images/checkmark"/>';
+			element += '<img class="consult_task_completed" src="images/checkmark.png"/>';
 		}
 		element += '</li>';
 		$("#treatment_list").append(element);

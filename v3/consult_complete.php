@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html onclick="closeNav();">
+<html>
 
 <?php
 	require_once 'include/include.php';
@@ -109,16 +109,12 @@
 	var edit_code = <?php echo "'" . $edit_code . "'"; ?>;
 </script>
 
-<div id="mySidenav" class="sidenav">
-  	<a href="#"><?php echo SETTINGS; ?></a>
-</div>
-<div id="content" class="container-fluid" onclick="closeNav();">
+<div id="content" class="container-fluid">
 
 	<div id="navigation_header_row" class="row">
 		<div id="navigation_header_col" class="col-xs-12">
 			<img id="navigation_header_image" onclick="homeClick();" src="images/home_white.png" alt="Home" height="28px" width="28px">
 			<span id="navigation_header_span"><?php echo COMPLETED_CONSULT; ?></span>
-			<img id="navigation_header_menu" src="images/menu.png" alt="Menu" height="28px" width="28px">
 		</div>
 		<div id="navigation_header_bottom_buffer"></div>		
 	</div>
@@ -126,7 +122,7 @@
 	<div id="link_row" class="row">
 		<div class="col-xs-12">
 			<?php
-			echo '<a id="back_link" onclick="backClick(' . $mode . ', \'' . $temp_patient_id . '\');">' . BACK_TO_PROFILE . '</a>';
+			echo '<a id="back_link" onclick="backClick(' . $mode . ', ' . $temp_patient_id . ');">' . BACK_TO_PROFILE . '</a>';
 			?>
 		</div>
 	</div>

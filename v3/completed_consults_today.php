@@ -69,7 +69,7 @@
 							$recent_consult_id = $db->getRecentConsultId($patient_id);
 
 							$patient_id = "'" . $patient_id . "'";
-							$active_consult_id = "'" . $active_consult_id . "'";
+							$recent_consult_id = "'" . $recent_consult_id . "'";
 
 							$list_item2_text = Utilities::getCurrentAgeString($date_of_birth, $lang);
 

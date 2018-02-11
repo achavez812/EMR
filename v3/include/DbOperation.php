@@ -1470,9 +1470,8 @@ class DbOperation
         if($this->hasMatchingGeneralHPI($chief_complaint_id)) {
             $this->updateGeneralHPI($chief_complaint_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes);
         } else {
-            $id = $this->generateUUID();
-            $stmt = $this->con->prepare("INSERT INTO hpi_general(id, chief_complaint_id, consult_id, o_how, o_cause, p_provocation, p_palliation, q_type, r_region_main, r_region_radiates, s_level, t_begin_time, t_before, t_current, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssssssssss", $id, $chief_complaint_id, $consult_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes);
+            $stmt = $this->con->prepare("INSERT INTO hpi_general(chief_complaint_id, consult_id, o_how, o_cause, p_provocation, p_palliation, q_type, r_region_main, r_region_radiates, s_level, t_begin_time, t_before, t_current, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssssssss", $chief_complaint_id, $consult_id, $o_how, $o_cause, $p_provocation, $p_palliation, $q_type, $r_region_main, $r_region_radiates, $s_level, $t_begin_time, $t_before, $t_current, $notes);
             $result = $stmt->execute();
             $stmt->close();
         }
@@ -1485,9 +1484,8 @@ class DbOperation
         if($this->hasMatchingPregnancyHPI($chief_complaint_id)) {
             $this->updatePregnancyHPI($chief_complaint_id, $num_weeks_pregnant, $receiving_prenatal_care, $received_ultrasound, $num_live_births, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes);
         } else {
-            $id = $this->generateUUID();
-            $stmt = $this->con->prepare("INSERT INTO hpi_pregnancy(id, chief_complaint_id, consult_id, num_weeks_pregnant, receiving_prenatal_care, taking_prenatal_vitamins, received_ultrasound, num_live_births, num_miscarriages, dysuria_urgency_frequency, abnormal_vaginal_discharge, vaginal_bleeding, previous_pregnancy_complications, complications_notes, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssssssssss", $id, $chief_complaint_id, $consult_id, $num_weeks_pregnant, $receiving_prenatal_care, $taking_prenatal_vitamins, $received_ultrasound, $num_live_births, $num_miscarriages, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes);
+            $stmt = $this->con->prepare("INSERT INTO hpi_pregnancy(chief_complaint_id, consult_id, num_weeks_pregnant, receiving_prenatal_care, taking_prenatal_vitamins, received_ultrasound, num_live_births, num_miscarriages, dysuria_urgency_frequency, abnormal_vaginal_discharge, vaginal_bleeding, previous_pregnancy_complications, complications_notes, notes) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssssssss", $chief_complaint_id, $consult_id, $num_weeks_pregnant, $receiving_prenatal_care, $taking_prenatal_vitamins, $received_ultrasound, $num_live_births, $num_miscarriages, $dysuria_urgency_frequency, $abnormal_vaginal_discharge, $vaginal_bleeding, $previous_pregnancy_complications, $complications_notes, $notes);
             $stmt->execute();
             $stmt->close();
         }
