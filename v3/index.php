@@ -36,6 +36,14 @@
 		} else {
 			header("LOCATION: settings.php?lang=" . $lang . "&show_alert=2");
 		}
+	} else if (isset($_GET['importDone'])) {
+		echo '<script>';
+		echo 'alert("' . IMPORT_DONE_MESSAGE . '")';
+		echo '</script>';
+	} else if (isset($_GET['exportDone'])) {
+		echo '<script>';
+		echo 'alert("' . EXPORT_DONE_MESSAGE . '")';
+		echo '</script>';
 	}
 
 	$db->close();

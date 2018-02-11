@@ -37,6 +37,8 @@ define("EXPORT_DIRECTORY_DOES_NOT_EXIST", "Error: La carpeta de exportación no 
 define("NO_MORE_DIRECTORIES", "No hay carpetas adentro esta carpeta.");
 define("HIT_SAVE_TO_EXPORT_TO_THIS_DIRECTORY", "Toque GUARDAR para exportar a esta carpeta.");
 define("CURRENT_DIRECTORY_FIELD", "Carpeta Actual:");
+define("IMPORT_DONE_MESSAGE", "La importación has terminado.");
+define("EXPORT_DONE_MESSAGE", "La exportación has terminado.");
 
 
 

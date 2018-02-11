@@ -730,11 +730,12 @@
 
 	
 
-
+	$temp_patient_id = "'" . $patient_id . "'";
+	$temp_consult_id = "'" . $consult_id . "'";
 ?>
 
 <div id="mySidenav" class="sidenav">
-	<a onclick="deleteConsultClick(<?php echo $consult_id . ', ' . $mode; ?>);"><?php echo DELETE_CONSULT; ?></a>
+	<a onclick="deleteConsultClick(<?php echo $temp_consult_id . ', ' . $mode; ?>);"><?php echo DELETE_CONSULT; ?></a>
 </div>
 <div id="content" class="container-fluid" onclick="closeNav();">
 
@@ -790,11 +791,11 @@
 				<span id="triage_intake_extra_text" class="left_title2 <?php if($ready_for == CONSULT_STATUS_READY_FOR_MEDICAL_CONSULT) { echo "hidden"; } ?>"><?php echo $triage_intake_extra_text; ?></span>
 			</div>
 			<ul class="list-group">
-				<li class="list-group-item" onclick="chiefComplaintClick(<?php echo $consult_id . ', ' . $mode;?>);">
+				<li class="list-group-item" onclick="chiefComplaintClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo CHIEF_COMPLAINT_HPI; ?>
 					<?php if($db->consultHasChiefComplaint($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
 				</li>
-				<li class="list-group-item" onclick="vitalSignsMeasurementsClick(<?php echo $consult_id . ', ' . $mode;?>);">
+				<li class="list-group-item" onclick="vitalSignsMeasurementsClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo VITALS_MEASUREMENTS; ?>
 					<?php if($db->consultHasMeasurements($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
 				</li>
@@ -810,23 +811,23 @@
 				<span id="medical_consult_extra_text" class="left_title2 <?php if($ready_for == CONSULT_STATUS_READY_FOR_TRIAGE_INTAKE) { echo "hidden"; } ?>"><?php echo $medical_consult_extra_text; ?></span>
 			</div>
 			<ul class="list-group">
-				<li class="list-group-item" onclick="examsClick(<?php echo $consult_id . ', ' . $mode;?>);">
+				<li class="list-group-item" onclick="examsClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo EXAMS; ?>
 					<?php if($db->consultHasExam($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
 				</li>
-				<li class="list-group-item" onclick="diagnosisClick(<?php echo $consult_id . ', ' . $mode;?>);">
+				<li class="list-group-item" onclick="diagnosisClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo DIAGNOSIS; ?>
 					<?php if($db->consultHasDiagnosis($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>
 				</li>
-				<li class="list-group-item" onclick="treatmentClick(<?php echo $consult_id . ', ' . $mode;?>);">
+				<li class="list-group-item" onclick="treatmentClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo TREATMENT; ?>
 					<?php if($db->consultHasTreatment($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>	
 				</li>
-				<li class="list-group-item" onclick="followupClick(<?php echo $consult_id . ', ' . $mode;?>);">
+				<li class="list-group-item" onclick="followupClick(<?php echo $temp_consult_id . ', ' . $mode;?>);">
 					<?php echo FOLLOWUP; ?>
 					<?php if($db->consultHasFollowup($consult_id)) { echo '<img class="consult_task_completed" src="images/checkmark"/>'; } ?>	
 				</li>
-				<li class="list-group-item" onclick="signAndCompleteClick(<?php echo $consult_id . ', ' . $mode;?>);"><?php echo SIGN_AND_COMPLETE; ?></li>
+				<li class="list-group-item" onclick="signAndCompleteClick(<?php echo $temp_consult_id . ', ' . $mode;?>);"><?php echo SIGN_AND_COMPLETE; ?></li>
 			</ul>
 		</div>
 	</div>
@@ -1635,7 +1636,7 @@ var php_abnormal_exams = <?php echo $json_abnormal_exams; ?>;
 		    <div id="modal_exams" class="modal-body">
 		    	<div class="input_row">
 			    	<p id="exam_type_title" class="left_title5"><?php echo EXAM_TYPE; ?></p>
-			    	<a id="exam_type_title_link" class="left_title5 hidden" onclick='examMapClick(<?php echo $consult_id . ', ' . $mode . ', "", "", "", "", ""'; ?>);'><?php echo EXAM_TYPE; ?></a>
+			    	<a id="exam_type_title_link" class="left_title5 hidden" onclick='examMapClick(<?php echo $temp_consult_id . ', ' . $mode . ', "", "", "", "", ""'; ?>);'><?php echo EXAM_TYPE; ?></a>
 		  			<ul id="exam_list" class="list-group"></ul>
 		  			<div id="exam_form_stuff" class="hidden">
 		  				<div id="other_exam_div" class="hidden">
@@ -1711,13 +1712,13 @@ Page 3: Within a category, other option (Can go back to Page 1 or Page 2)
 	      	</div>
 		    <div id="modal_diagnoses" class="modal-body">
 		    	<div id="diagnosis_header_stuff">
-		    		<a id="diagnosisPage1Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $consult_id . ', ' . $mode . ', 1, ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
+		    		<a id="diagnosisPage1Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 1, ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
 			    	<p id="diagnosisPage1P" class="left_title5 hidden"><?php echo MAIN_OPTIONS; ?></p>
 				    
-			    	<a id="diagnosisPage2Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $consult_id . ', ' . $mode . ', 2, ""'; ?>);'><?php echo CATEGORIES; ?></a>
+			    	<a id="diagnosisPage2Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 2, ""'; ?>);'><?php echo CATEGORIES; ?></a>
 				    <p id="diagnosisPage2P" class="left_title5 hidden"><?php echo CATEGORIES; ?></p>
 				    
-				    <a id="diagnosisPage3Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $consult_id . ', ' . $mode . ', 3, ""'; ?>);'><?php echo CATEGORIES; ?></a>
+				    <a id="diagnosisPage3Link" class="left_title5 hidden" onclick='diagnosesPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 3, ""'; ?>);'><?php echo CATEGORIES; ?></a>
 				    <p id="diagnosisPage3P" class="left_title5 hidden"></p>
 				</div>
 		    	<ul id="diagnosis_list" class="list-group"></ul>
@@ -1793,10 +1794,10 @@ var php_treatments = <?php echo $json_treatments; ?>;
 	      	</div>
 		    <div id="modal_treatment" class="modal-body">
 		    	<div id="treatment_header_stuff">
-		    		<a id="treatmentPage1Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $consult_id . ', ' . $mode . ', 1, "", ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
+		    		<a id="treatmentPage1Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 1, "", ""'; ?>);'><?php echo MAIN_OPTIONS; ?></a>
 			    	<p id="treatmentPage1P" class="left_title5 hidden"><?php echo MAIN_OPTIONS; ?></p>
 				    
-			    	<a id="treatmentPage2Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $consult_id . ', ' . $mode . ', 2, "", ""'; ?>);'><?php echo CATEGORIES; ?></a>
+			    	<a id="treatmentPage2Link" class="left_title5 hidden" onclick='treatmentPageClick(<?php echo $temp_consult_id . ', ' . $mode . ', 2, "", ""'; ?>);'><?php echo CATEGORIES; ?></a>
 				    <p id="treatmentPage2P" class="left_title5 hidden"></p>
 				    
 				    <p id="treatmentPage3P" class="left_title5 hidden"></p>
@@ -2155,8 +2156,8 @@ var php_followup_map = <?php echo $json_followup_map; ?>;
 
 			</div>
 		    <div class="modal-footer">
-		      	<button id="followup_delete_button" type="button" class="btn btn-default <?php if(!$followup) { echo "hidden"; }?>" onclick="followupDeleteClick(<?php echo $consult_id . ', '. $mode . ', \'' . $followup_id . '\''; ?>);"><?php echo DELETE_CAPS; ?></button>
-		        <button id="followup_save_button" type="button" class="btn btn-default" onclick="followupSaveClick(<?php echo $consult_id . ', '. $mode . ', \'' . $followup_id . '\''; ?>);"><?php echo SAVE_CAPS; ?></button>
+		      	<button id="followup_delete_button" type="button" class="btn btn-default <?php if(!$followup) { echo "hidden"; }?>" onclick="followupDeleteClick(<?php echo $temp_consult_id . ', '. $mode . ', \'' . $followup_id . '\''; ?>);"><?php echo DELETE_CAPS; ?></button>
+		        <button id="followup_save_button" type="button" class="btn btn-default" onclick="followupSaveClick(<?php echo $temp_consult_id . ', '. $mode . ', \'' . $followup_id . '\''; ?>);"><?php echo SAVE_CAPS; ?></button>
 	      	</div>
 	    </div>
 	</div>
@@ -2414,7 +2415,7 @@ var php_group_mapping2 = <?php echo $json_group_mapping2; ?>;
 			</div>
 		    <div class="modal-footer">
 		      	<button id="sign_delete_button" type="button" class="btn btn-default hidden"><?php echo DELETE_CAPS; ?></button>
-		        <button id="sign_save_button" type="button" class="btn btn-default" onclick="signSaveClick(<?php echo $consult_id . ', '. $mode; ?>);"><?php echo SAVE_CAPS; ?></button>
+		        <button id="sign_save_button" type="button" class="btn btn-default" onclick="signSaveClick(<?php echo $temp_consult_id . ', '. $mode; ?>);"><?php echo SAVE_CAPS; ?></button>
 	      	</div>
 	    </div>
 	</div>

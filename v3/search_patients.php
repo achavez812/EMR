@@ -136,6 +136,8 @@
 						$exact_date_of_birth_known = $patient[PATIENTS_COLUMN_EXACT_DATE_OF_BIRTH_KNOWN];
 						$date_of_birth = $patient[PATIENTS_COLUMN_DATE_OF_BIRTH];
 
+						$id = "'" . $id . "'";
+
 						$list_item2_text = Utilities::getCurrentAgeString($date_of_birth, $lang);
 
 						echo '<li class="list-group-item" onclick="patientClick(' . $id . ', ' . $mode . ');">';
@@ -162,6 +164,8 @@
 						$community_name = $patient[PATIENTS_COLUMN_COMMUNITY_NAME];
 						$exact_date_of_birth_known = $patient[PATIENTS_COLUMN_EXACT_DATE_OF_BIRTH_KNOWN];
 						$date_of_birth = $patient[PATIENTS_COLUMN_DATE_OF_BIRTH];
+
+						$id = "'" . $id . "'";
 
 						$list_item2_text = Utilities::getCurrentAgeString($date_of_birth, $lang);
 

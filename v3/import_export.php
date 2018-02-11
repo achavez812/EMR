@@ -17,7 +17,7 @@
 		$current_import_dir = $_GET['import'];
 	} else if (isset($_GET['export'])) {
 		$current_export_dir = $_GET['export'];
-	}
+	} 
 
 ?>
 

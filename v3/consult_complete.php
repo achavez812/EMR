@@ -101,7 +101,8 @@
 	}
 	
 
-
+	$temp_patient_id = "'" . $patient_id . "'";
+	//$temp_consult_id = "'" . $consult_id . "'";
 ?>
 
 <script>
@@ -125,7 +126,7 @@
 	<div id="link_row" class="row">
 		<div class="col-xs-12">
 			<?php
-			echo '<a id="back_link" onclick="backClick(' . $mode . ', \'' . $patient_id . '\');">' . BACK_TO_PROFILE . '</a>';
+			echo '<a id="back_link" onclick="backClick(' . $mode . ', \'' . $temp_patient_id . '\');">' . BACK_TO_PROFILE . '</a>';
 			?>
 		</div>
 	</div>

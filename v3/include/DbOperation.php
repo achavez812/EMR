@@ -22,6 +22,7 @@ class DbOperation
 
     public function exportData($filename) {
         exec("mysqldump -h " . DB_HOST . " -u " . DB_USERNAME .  " --password=" . DB_PASSWORD . " " . DB_NAME . " > " . $filename);
+        header("LOCATION: index.php?exportDone=2&lang=" . $lang);
     }
 
     public function importData($filename) {
@@ -40,7 +41,7 @@ class DbOperation
         }
 
         // activate automatic reload in browser
-        //echo '<html><head> <meta http-equiv="refresh" content="'.($maxRuntime+2).'"><pre>';
+        echo '<html><head> <meta http-equiv="refresh" content="'.($maxRuntime+2).'"><pre>';
 
         // go to previous file position
         $filePosition = 0;
@@ -422,21 +423,10 @@ class DbOperation
         }
 
         if( feof($fp) ){
-            //header("LOCATION: index.php?lang=" . $lang);
             fclose($fp);
-            if(unlink($progressFilename)) {
-                echo "Deleted Progress file<br>";
-            } else {
-                echo "NOT Deleted Progress file<br>";
-            }
-            if(unlink($consultsProcessedFilename)) {
-                echo "Deleted Consults file<br>";
-            } else {
-                echo "NOT Deleted Consults file<br>";
-            }
-            
-            echo 'dump successfully restored!';
-
+            unlink($progressFilename);
+            unlink($consultsProcessedFilename);
+            header("LOCATION: index.php?importDone=2&lang=" . $lang);
         }else{
             echo ftell($fp).'/'.filesize($filename).' '.(round(ftell($fp)/filesize($filename), 2)*100).'%'."\n";
             echo $queryCount.' queries processed! please reload or wait for automatic browser refresh!';
@@ -448,9 +438,13 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT datetime_last_updated FROM " . $table_name . " WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        //
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
+        $stmt->close();
         if($num_rows > 0) {
+            $stmt = $this->con->prepare("SELECT datetime_last_updated FROM " . $table_name . " WHERE id = ?");
+            $stmt->bind_param("s", $id);
+            $stmt->execute();
             $row = $stmt->get_result()->fetch_assoc();
             $stmt->close();
 
@@ -472,7 +466,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM " . $table_name . " WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -506,7 +500,7 @@ class DbOperation
     function deleteConsultRows($table_name, $consult_id) {
         $stmt = $this->con->prepare("DELETE FROM " . $table_name . " WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
-        $num_rows_deleted = $stmt->execute();
+        $stmt->execute();
         $stmt->close();
     }
 
@@ -517,7 +511,7 @@ class DbOperation
     public function usersExist() {
         $stmt = $this->con->prepare("SELECT id from admin_user");
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -527,7 +521,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id from admin_user WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -561,7 +555,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM admin_user WHERE username = ? AND password = ?");
         $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0; 
@@ -662,7 +656,7 @@ class DbOperation
     public function settingsExist() {
         $stmt = $this->con->prepare("SELECT id from settings");
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -717,7 +711,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM patients WHERE consult_status = ? AND consult_status_datetime > ?");
         $stmt->bind_param("ss", $consult_status_complete, $current_date);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0; 
@@ -737,7 +731,7 @@ class DbOperation
     public function isTableEmpty($table) {
         $stmt = $this->con->prepare("SELECT * from " . $table);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows == 0;
@@ -755,7 +749,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT * from communities WHERE name = ?");
         $stmt->bind_param("s", $name);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -800,7 +794,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT * from patients WHERE id = ?");
         $stmt->bind_param("s", $patient_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -822,7 +816,7 @@ class DbOperation
             $stmt = $this->con->prepare("SELECT id from patients WHERE name LIKE ? OR (sex = ? AND exact_date_of_birth_known = ? AND date_of_birth = ?)");
             $stmt->bind_param("ssss", $name, $sex, $exact_date_of_birth_known, $date_of_birth);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
             return $num_rows > 0; 
@@ -830,7 +824,7 @@ class DbOperation
             $stmt = $this->con->prepare("SELECT id from patients WHERE name LIKE ?");
             $stmt->bind_param("s", $name);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
             return $num_rows > 0;
@@ -903,7 +897,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM patients WHERE consult_status = ?");
         $stmt->bind_param("s", $consult_status);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1011,7 +1005,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM messages WHERE patient_id = ? AND status = ?");
         $stmt->bind_param("ss", $patient_id, $status_active);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1040,7 +1034,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM messages WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1097,8 +1091,8 @@ class DbOperation
             }
 
             $id = $this->generateUUID();
-            $stmt = $this->con->prepare("INSERT INTO consults(id, patient_id, datetime_started, status, location, medical_group, chief_physician) values(?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssss", $id, $patient_id, $current_datetime, $status, $location, $medical_group, $chief_physician);
+            $stmt = $this->con->prepare("INSERT INTO aa_consults(id, patient_id, datetime_started, status, location, medical_group, chief_physician, datetime_last_updated) values(?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssss", $id, $patient_id, $current_datetime, $status, $location, $medical_group, $chief_physician, $current_datetime);
             $result = $stmt->execute();
             $stmt->close();
             if ($result) {
@@ -1136,8 +1130,8 @@ class DbOperation
         $location = preg_replace("/\),\s\(/", "], [", $location);
         $notes = preg_replace("/\),\s\(/", "], [", $notes);
 
-        $stmt = $this->con->prepare("UPDATE aa_consults SET medical_group = ?, chief_physician = ?, signing_physician = ?, location = ?, notes = ?, datetime_completed = ? WHERE id = ?");
-        $stmt->bind_param("sssssss", $medical_group, $chief_physician, $signing_physician, $location, $notes, $datetime_completed, $consult_id);
+        $stmt = $this->con->prepare("UPDATE aa_consults SET medical_group = ?, chief_physician = ?, signing_physician = ?, location = ?, notes = ?, datetime_completed = ?, datetime_last_updated = ? WHERE id = ?");
+        $stmt->bind_param("ssssssss", $medical_group, $chief_physician, $signing_physician, $location, $notes, $datetime_completed, $datetime_completed, $consult_id);
         $result = $stmt->execute();
         $stmt->close();
     }
@@ -1158,14 +1152,15 @@ class DbOperation
     }
 
     public function updateConsultStatus($patient_id, $consult_id, $status) {
-        $stmt = $this->con->prepare("UPDATE aa_consults SET status = ? WHERE id = ?");
-        $stmt->bind_param("ss", $status, $consult_id);
+        $current_datetime = Utilities::getCurrentDateTime();
+        $stmt = $this->con->prepare("UPDATE aa_consults SET status = ?, datetime_last_updated = ? WHERE id = ?");
+        $stmt->bind_param("sss", $status, $current_datetime, $consult_id);
         $result = $stmt->execute();
         $stmt->close();
         if($result){
             if($status == 6) {
-                $stmt = $this->con->prepare("UPDATE patients SET consult_status = ? WHERE id = ?");
-                $stmt->bind_param("ss", $status, $patient_id);
+                $stmt = $this->con->prepare("UPDATE patients SET consult_status = ?, datetime_last_updated = ? WHERE id = ?");
+                $stmt->bind_param("sss", $status, $current_datetime, $patient_id);
                 $result = $stmt->execute();
                 $stmt->close();
             } else {
@@ -1225,7 +1220,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM aa_consults WHERE patient_id = ? AND datetime_completed IS NULL");
         $stmt->bind_param("s", $patient_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1235,7 +1230,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM aa_consults WHERE patient_id = ?");
         $stmt->bind_param("s", $patient_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1267,7 +1262,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM aa_consults WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1355,7 +1350,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM chief_complaints WHERE consult_id = ? AND type = ? AND selected_value != ?");
         $stmt->bind_param("sss", $consult_id, $type, $invalid_chief_complaint_arg);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1391,7 +1386,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM chief_complaints WHERE consult_id = ? AND type = ?");
         $stmt->bind_param("ss", $consult_id, $type);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1402,7 +1397,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM chief_complaints WHERE consult_id = ? AND type = ? AND selected_value = ?");
         $stmt->bind_param("sss", $consult_id, $type, $invalid_chief_complaint_arg);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1423,7 +1418,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM chief_complaints WHERE consult_id = ? AND type = ? AND (selected_value = ? OR (selected_value  = ? AND custom_text = ?))");
         $stmt->bind_param("sssss", $consult_id, $type, $selected_value, $invalid_chief_complaint_arg, $custom_text);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1433,7 +1428,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM chief_complaints WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1547,7 +1542,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT chief_complaint_id FROM hpi_general WHERE chief_complaint_id = ?");
         $stmt->bind_param("s", $chief_complaint_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1557,7 +1552,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT chief_complaint_id FROM hpi_pregnancy WHERE chief_complaint_id = ?");
         $stmt->bind_param("s", $chief_complaint_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1567,7 +1562,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT chief_complaint_id FROM hpi_general WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
 
@@ -1577,7 +1572,7 @@ class DbOperation
             $stmt = $this->con->prepare("SELECT chief_complaint_id FROM hpi_pregnancy WHERE consult_id = ?");
             $stmt->bind_param("s", $consult_id);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
             return $num_rows > 0;
@@ -1663,7 +1658,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM measurements WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1879,35 +1874,35 @@ class DbOperation
             $stmt = $this->con->prepare("SELECT id FROM exams WHERE consult_id = ? AND is_normal = ? AND main_category = ? AND arg1 is NULL");
             $stmt->bind_param("sss", $consult_id, $is_normal, $main_category);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
         } else if ($arg2 == NULL) {
             $stmt = $this->con->prepare("SELECT id FROM exams WHERE consult_id = ? AND is_normal = ? AND main_category = ? AND arg1 = ? AND arg2 is NULL");
             $stmt->bind_param("ssss", $consult_id, $is_normal, $main_category, $arg1);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
         } else if ($arg3 == NULL) {
             $stmt = $this->con->prepare("SELECT id FROM exams WHERE consult_id = ? AND is_normal = ? AND main_category = ? AND arg1 = ? AND arg2 = ? AND arg3 is NULL");
             $stmt->bind_param("sssss", $consult_id, $is_normal, $main_category, $arg1, $arg2);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
         } else if ($arg4 == NULL) {
             $stmt = $this->con->prepare("SELECT id FROM exams WHERE consult_id = ? AND is_normal = ? AND main_category = ? AND arg1 = ? AND arg2 = ? AND arg3 = ? AND arg4 is NULL");
             $stmt->bind_param("ssssss", $consult_id, $is_normal, $main_category, $arg1, $arg2, $arg3);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
         } else {
             $stmt = $this->con->prepare("SELECT id FROM exams WHERE consult_id = ? AND is_normal = ? AND main_category = ? AND arg1 = ? AND arg2 = ? AND arg3 = ? AND arg4 = ?");
             $stmt->bind_param("sssssss", $consult_id, $is_normal, $main_category, $arg1, $arg2, $arg3, $arg4);
             $stmt->execute();
-            
+            $stmt->store_result();
             $num_rows = $stmt->num_rows;
             $stmt->close();
         }
@@ -1918,7 +1913,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM exams WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -1928,7 +1923,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM exams WHERE consult_id = ? AND is_normal = ?");
         $stmt->bind_param("ss", $consult_id, $is_normal);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2012,7 +2007,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM diagnoses_conditions_illnesses WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2092,7 +2087,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM history_medications WHERE consult_id = ? AND name = ?");
         $stmt->bind_param("ss", $consult_id, $name);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2153,7 +2148,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM treatments WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2228,7 +2223,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM followups WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0; 
@@ -2247,7 +2242,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM followups WHERE consult_id = ?");
         $stmt->bind_param("s", $consult_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2314,7 +2309,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM history_allergies WHERE patient_id = ?");
         $stmt->bind_param("s", $patient_id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2324,7 +2319,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM history_allergies WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2394,7 +2389,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM diagnoses_conditions_illnesses WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2468,7 +2463,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM history_surgeries WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;
@@ -2538,7 +2533,7 @@ class DbOperation
         $stmt = $this->con->prepare("SELECT id FROM history_medications WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        
+        $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
         return $num_rows > 0;

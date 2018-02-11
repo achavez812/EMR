@@ -112,6 +112,9 @@
 
 							$active_consult_id = $db->getActiveConsultId($patient_id);
 
+							$patient_id = "'" . $patient_id . "'";
+							$active_consult_id = "'" . $active_consult_id . "'";
+
 							$list_item2_text = Utilities::getCurrentAgeString($date_of_birth, $lang);
 
 							echo '<li class="list-group-item" onclick="patientClick(' . $patient_id . ', ' . $active_consult_id . ');">';
@@ -162,6 +165,9 @@
 							$date_of_birth = $patient[PATIENTS_COLUMN_DATE_OF_BIRTH];
 
 							$active_consult_id = $db->getActiveConsultId($patient_id);
+
+							$patient_id = "'" . $patient_id . "'";
+							$active_consult_id = "'" . $active_consult_id . "'";
 
 							$list_item2_text = Utilities::getCurrentAgeString($date_of_birth, $lang);
 

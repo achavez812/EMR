@@ -148,6 +148,7 @@
 	$date_of_birth = $patient[PATIENTS_COLUMN_DATE_OF_BIRTH];
 	$age_string = Utilities::getCurrentAgeString($date_of_birth, $lang);
 
+	$temp_patient_id = "'" . $patient_id . "'";
 	if($lang == "es") {
 		echo '<script type="text/javascript" src="js/Constants_es.js"></script>';
 	} else {
@@ -188,7 +189,7 @@
 			<p class="left_title"><?php echo ALLERGIES; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addAllergy(<?php echo $patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="../images/add.png" alt="Add" onclick="addAllergy(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 
@@ -214,7 +215,9 @@
 				$name = $allergy['name'];
 				$notes = $allergy['notes'];
 
-				echo '<li class="list-group-item" onclick="allergyClick(' . $patient_id . ', ' . $allergy_id . ', ' . $mode . ', \'' . $name . '\', \'' . $notes . '\');">' . $name . '</li>';
+				$temp_allergy_id = "'" . $allergy_id . "'";
+
+				echo '<li class="list-group-item" onclick="allergyClick(' . $temp_patient_id . ', ' . $temp_allergy_id . ', ' . $mode . ', \'' . $name . '\', \'' . $notes . '\');">' . $name . '</li>';
 
 			}
 
@@ -234,7 +237,7 @@
 			<p class="left_title"><?php echo ILLNESSES_CONDITIONS; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addIllnessCondition(<?php echo $patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="../images/add.png" alt="Add" onclick="addIllnessCondition(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 
@@ -279,7 +282,10 @@
 					$consult_active = $db->isConsultComplete($consult_id);
 				}
 
-				echo '<li class="list-group-item" onclick="illnessClick(' . $patient_id . ', ' . $illness_id . ', ' . $mode . ', \'' . $consult_id . '\', \'' . $consult_active . '\', \'' . $is_chronic . '\', \'' . $type . '\', \'' . $other . '\', \'' . $start_date . '\', \'' . $end_date . '\', \'' . $notes . '\');">' . $display_text . '</li>';
+				$temp_illness_id = "'" . $illness_id . "'";
+				//$temp_consult_id = "'" . $consult_id . "'";
+
+				echo '<li class="list-group-item" onclick="illnessClick(' . $temppatient_id . ', ' . $temp_illness_id . ', ' . $mode . ', \'' . $consult_id . '\', \'' . $consult_active . '\', \'' . $is_chronic . '\', \'' . $type . '\', \'' . $other . '\', \'' . $start_date . '\', \'' . $end_date . '\', \'' . $notes . '\');">' . $display_text . '</li>';
 				$illness_cnt++;
 				if($illness_cnt >= 10) {
 					break;
@@ -301,7 +307,7 @@
 			<p class="left_title"><?php echo SURGERIES; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addSurgery(<?php echo $patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="../images/add.png" alt="Add" onclick="addSurgery(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 
@@ -333,7 +339,9 @@
 					$display_text .= " (" . Utilities::formatDateForDisplay2($date) . ")";
 				} 
 
-				echo '<li class="list-group-item" onclick="surgeryClick(' . $patient_id . ', ' . $surgery_id . ', ' . $mode . ', ' . $is_name_custom . ', \'' . $name . '\', \'' . $date . '\', \'' . $notes . '\');">' . $display_text . '</li>';
+				$temp_surgery_id = "'" . $surgery_id . "'";
+
+				echo '<li class="list-group-item" onclick="surgeryClick(' . $patient_id . ', ' . $temp_surgery_id . ', ' . $mode . ', ' . $is_name_custom . ', \'' . $name . '\', \'' . $date . '\', \'' . $notes . '\');">' . $display_text . '</li>';
 			}
 
 			if($no_reported_information_surgeries) {
@@ -351,7 +359,7 @@
 			<p class="left_title"><?php echo MEDICATIONS; ?></p>
 		</div>
 		<div class="col-xs-2">
-			<img class="icon" src="../images/add.png" alt="Add" onclick="addMedication(<?php echo $patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
+			<img class="icon" src="../images/add.png" alt="Add" onclick="addMedication(<?php echo $temp_patient_id . ', ' . $mode; ?>);" height="25px" width="25px">
 		</div>
 	</div>
 
@@ -384,9 +392,10 @@
 				if($consult_id) {
 					$consult_active = $db->isConsultComplete($consult_id);
 				}
-				
 
-				echo '<li class="list-group-item" onclick="medicationClick(' . $patient_id . ', ' . $medication_id . ', \'' . $consult_id . '\', \'' . $consult_active . '\', ' . $mode . ', \'' . $name . '\', \'' . $start_date . '\', \'' . $end_date . '\', \'' . $notes . '\');">' . $display_text . '</li>';
+				$temp_medication_id = "'" . $medication_id . "'";
+
+				echo '<li class="list-group-item" onclick="medicationClick(' . $temp_patient_id . ', ' . $temp_medication_id . ', \'' . $consult_id . '\', \'' . $consult_active . '\', ' . $mode . ', \'' . $name . '\', \'' . $start_date . '\', \'' . $end_date . '\', \'' . $notes . '\');">' . $display_text . '</li>';
 			}
 			
 			if($no_reported_information_medications) {

@@ -35,6 +35,8 @@ define("EXPORT_DIRECTORY_DOES_NOT_EXIST", "Error: Export Directory Does not Exis
 define("NO_MORE_DIRECTORIES", "There are no directories within this directory.");
 define("HIT_SAVE_TO_EXPORT_TO_THIS_DIRECTORY", "Hit SAVE to export to this directory.");
 define("CURRENT_DIRECTORY_FIELD", "Current Directory:");
+define("IMPORT_DONE_MESSAGE", "The import has been completed.");
+define("EXPORT_DONE_MESSAGE", "The export has been completed.");
 
 
 define("REGISTRY_BROWSE", "Registry/Browse");

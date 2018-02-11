@@ -95,10 +95,10 @@
 
 	<div id="profile_button_row" class="row">
 		<div class="col-xs-6">
-			<button class="fill_button" onclick="consultClick(<?php echo $mode . ', ' . $patient_id . ', ' . $active_consult_id; ?>);"><?php echo CONSULT_CAPS; ?></button>
+			<button class="fill_button" onclick="consultClick(<?php echo $mode . ', \'' . $patient_id . '\', \'' . $active_consult_id . '\''; ?>);"><?php echo CONSULT_CAPS; ?></button>
 		</div>
 		<div class="col-xs-6">
-			<button class="fill_button" onclick="historyClick(<?php echo $mode . ', ' . $patient_id . ', ' . $active_consult_id; ?>);"><?php echo HISTORY_CAPS; ?></button>
+			<button class="fill_button" onclick="historyClick(<?php echo $mode . ', \'' . $patient_id . '\', \'' . $active_consult_id . '\''; ?>);"><?php echo HISTORY_CAPS; ?></button>
 		</div>
 	</div>
 
@@ -119,9 +119,13 @@
 					$submitter = $active_message['submitter'];
 					$datetime_created = $active_message['datetime_created'];
 
+					$message_id = "'" . $message_id . "'";
+					$temp_patient_id = "'" . $patient_id . "'";
+					$temp_active_consult_id = "'" . $active_consult_id . "'";
+
 					$formatted_datetime = Utilities::formatDateTimeForDisplay($datetime_created);
 
-					echo "<li class='list-group-item' data-toggle='modal' data-target='#myModal' onclick='messageClick($mode, $patient_id, $message_id, \"$message\", \"$submitter\", $active_consult_id, \"$formatted_datetime\");'>";
+					echo "<li class='list-group-item' data-toggle='modal' data-target='#myModal' onclick='messageClick($mode, $temp_patient_id, $message_id, \"$message\", \"$submitter\", $temp_active_consult_id, \"$formatted_datetime\");'>";
 			    	echo '<p class="list_item1">' . $formatted_datetime . '</p>';
 			    	echo '<p class="list_item2">' . POSTED_BY_FIELD . " " . $submitter . '</p>';
 			    	echo "</li>";
@@ -152,6 +156,8 @@
 	    	$datetime_started = $consult["datetime_started"];
 	    	$status = $consult['status'];
 
+	    	$temp_consult_id = "'" . $consult_id . "'";
+
 	    	$line1_text = Utilities::formatDateForDisplay($datetime_started);
 	    	$line2_text = "";
 
@@ -175,7 +181,7 @@
 	    		} 
 	    	}
 
-	    	echo "<li class='list-group-item'onclick='existingConsultClick($mode, $consult_id, $status);'>";
+	    	echo "<li class='list-group-item'onclick='existingConsultClick($mode, $temp_consult_id, $status);'>";
 	    	echo '<p class="list_item1">' . $line1_text . '</p>';
 	    	if($line2_text != "") {
 		    	echo '<p class="list_item2">' . $line2_text . '</p>';

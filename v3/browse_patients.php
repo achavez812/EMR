@@ -71,6 +71,7 @@
 						$consult_status = $patient[PATIENTS_COLUMN_CONSULT_STATUS];
 						$consult_status_datetime = $patient[PATIENTS_COLUMN_CONSULT_STATUS_DATETIME];
 
+						$id = "'" . $id . "'";
 
 						$list_item2_text = Utilities::getCurrentAgeString($date_of_birth, $lang);
 
