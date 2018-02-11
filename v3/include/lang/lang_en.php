@@ -30,6 +30,12 @@ define("SELECT_AN_IMPORT_FILE", "Select an Import File");
 define("IMPORT_DIRECTORY_DOES_NOT_EXIST", "Error: Import Directory Does not Exist.");
 define("NO_VALID_FILES_IN_IMPORT_DIRECTORY", "There are no .sql files in the import directory.");
 define("EXPORT_FILENAME_FIELD", "Export Filename:");
+define("SELECT_EXPORT_DIRECTORY", "Select Export Directory:");
+define("EXPORT_DIRECTORY_DOES_NOT_EXIST", "Error: Export Directory Does not Exist.");
+define("NO_MORE_DIRECTORIES", "There are no directories within this directory.");
+define("HIT_SAVE_TO_EXPORT_TO_THIS_DIRECTORY", "Hit SAVE to export to this directory.");
+define("CURRENT_DIRECTORY_FIELD", "Current Directory:");
+
 
 define("REGISTRY_BROWSE", "Registry/Browse");
 define("READY_FOR_TRIAGE_INTAKE", "Ready for Triage/Intake");
