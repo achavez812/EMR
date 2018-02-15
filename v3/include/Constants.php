@@ -3,9 +3,11 @@
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
 define('DB_HOST', 'localhost');      
-define('DB_NAME', 'db_emr');
+define('DB_NAME', 'emr_db');
 
 define('BASE_IMPORT_EXPORT_DIRECTORY', "/media/pi/"); //USB SHOULD APPEAR WITHIN THIS DIRECTORY
+
+
 
 const BASE_COMMUNITIES = ["Providencia", "Pampojila", "San Gabriel", "San Andres", "Nueva Vida", "San Jose", "Totolya", "Porvenir", "Tierra Santa", "San Gregorio", "San Felipe", "Quixaya", "San Juan", "Xejuyu", "Panimaquip", "San Martin", "Sector 97", "Santa Teresita", "El Naranjo"];
 
