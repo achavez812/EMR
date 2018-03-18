@@ -20,20 +20,30 @@ class DbOperation
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    public function exportData($filename) {
-        exec("mysqldump -h " . DB_HOST . " -u " . DB_USERNAME .  " --password=" . DB_PASSWORD . " " . DB_NAME . " > " . $filename);
+    public function exportData($new_filepath, $lang) {
+        $last_slash = strrpos($new_filepath, "/");
+        $filename = substr($new_filepath, $last_slash + 1);
+        $current_filepath = TEMP_DIRECTORY . $filename;
+        exec("mysqldump -h " . DB_HOST . " -u " . DB_USERNAME .  " --password=" . DB_PASSWORD . " " . DB_NAME . " > " . $current_filepath);
+        echo exec("sudo /usr/local/bin/emr_export.sh " . $current_filepath . " " . $new_filepath);
+      	unlink($current_filepath);
         header("LOCATION: index.php?exportDone=2&lang=" . $lang);
     }
 
-    public function importData($filename) {
-        $maxRuntime = 8; // less then your max script execution limit
+    public function importData($filepath, $lang) {
+	$last_slash = strrpos($filepath, "/");
+        $filename = substr($filepath, $last_slash + 1);
+	$temp_filepath = TEMP_DIRECTORY . $filename;
+	echo exec("sudo /usr/local/bin/emr_import.sh " . $filepath . " " . $temp_filepath);
 
+	
+	$maxRuntime = 8; // less then your max script execution limit
         $deadline = time()+$maxRuntime; 
-        $progressFilename = $filename.'_filepointer'; // tmp file for progress
-        $consultsProcessedFilename = $filenaame. '_consultsProcessed';
-        $errorFilename = $filename.'_error'; // tmp file for erro
+        $progressFilename = TEMP_DIRECTORY . $filename . '_filepointer'; // tmp file for progress
+        $consultsProcessedFilename = TEMP_DIRECTORY . $filename . '_consultsProcessed';
+        $errorFilename = TEMP_DIRECTORY . $filename . '_error'; // tmp file for erro
 
-        ($fp = fopen($filename, 'r')) OR die('failed to open file:'.$filename);
+        ($fp = fopen($temp_filepath, 'r')) OR die('failed to open file:'.$filename);
 
         // check for previous error
         if( file_exists($errorFilename) ){
@@ -424,6 +434,7 @@ class DbOperation
 
         if( feof($fp) ){
             fclose($fp);
+	    unlink($temp_filepath);
             unlink($progressFilename);
             unlink($consultsProcessedFilename);
             header("LOCATION: index.php?importDone=2&lang=" . $lang);

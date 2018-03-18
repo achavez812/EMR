@@ -60,8 +60,8 @@
 ?>
 
 <div id="mySidenav" class="sidenav">
-	<a onclick="editPatient(<?php echo $mode . ', ' . $patient_id; ?>);"><?php echo EDIT_PATIENT; ?></a>
-	<a data-toggle="modal" data-target="#myModal" onclick="postMessage(<?php echo $mode . ', ' . $patient_id; ?>);"><?php echo POST_MESSAGE; ?></a>
+	<a onclick="editPatient(<?php echo $mode . ', \'' . $patient_id . '\''; ?>);"><?php echo EDIT_PATIENT; ?></a>
+	<a data-toggle="modal" data-target="#myModal" onclick="postMessage(<?php echo $mode . ', \'' . $patient_id . '\''; ?>);"><?php echo POST_MESSAGE; ?></a>
 </div>
 
 <div id="content" class="container-fluid" onclick="closeNav();">
@@ -119,13 +119,14 @@
 					$submitter = $active_message['submitter'];
 					$datetime_created = $active_message['datetime_created'];
 
-					$message_id = "'" . $message_id . "'";
+					
+
 					$temp_patient_id = "'" . $patient_id . "'";
 					$temp_active_consult_id = "'" . $active_consult_id . "'";
 
 					$formatted_datetime = Utilities::formatDateTimeForDisplay($datetime_created);
 
-					echo "<li class='list-group-item' data-toggle='modal' data-target='#myModal' onclick='messageClick($mode, $temp_patient_id, $message_id, \"$message\", \"$submitter\", $temp_active_consult_id, \"$formatted_datetime\");'>";
+					echo "<li class='list-group-item' data-toggle='modal' data-target='#myModal' onclick='messageClick($mode, \"$patient_id\", \"$message_id\", \"$message\", \"$submitter\", \"$active_consult_id\", \"$formatted_datetime\");'>";
 			    	echo '<p class="list_item1">' . $formatted_datetime . '</p>';
 			    	echo '<p class="list_item2">' . POSTED_BY_FIELD . " " . $submitter . '</p>';
 			    	echo "</li>";

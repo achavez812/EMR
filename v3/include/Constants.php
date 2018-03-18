@@ -5,9 +5,10 @@ define('DB_PASSWORD', '');
 define('DB_HOST', 'localhost');      
 define('DB_NAME', 'emr_db');
 
-define('BASE_IMPORT_EXPORT_DIRECTORY', "/media/pi/"); //USB SHOULD APPEAR WITHIN THIS DIRECTORY
-
-
+define('BASE_IMPORT_EXPORT_DIRECTORY', "/media/usb0/"); //USB SHOULD APPEAR WITHIN THIS DIRECTORY
+define('TEMP_DIRECTORY', "/library/working/emr/");
+define('IMPORT_SCRIPT_LOCATION', "/usr/local/bin/emr_import.sh");
+define('EXPORT_SCRIPT_LOCATION', "/usr/local/bin/emr_export.sh");
 
 const BASE_COMMUNITIES = ["Providencia", "Pampojila", "San Gabriel", "San Andres", "Nueva Vida", "San Jose", "Totolya", "Porvenir", "Tierra Santa", "San Gregorio", "San Felipe", "Quixaya", "San Juan", "Xejuyu", "Panimaquip", "San Martin", "Sector 97", "Santa Teresita", "El Naranjo"];
 

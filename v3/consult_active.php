@@ -1637,7 +1637,7 @@ var php_abnormal_exams = <?php echo $json_abnormal_exams; ?>;
 		    <div id="modal_exams" class="modal-body">
 		    	<div class="input_row">
 			    	<p id="exam_type_title" class="left_title5"><?php echo EXAM_TYPE; ?></p>
-			    	<a id="exam_type_title_link" class="left_title5 hidden" onclick='examMapClick(<?php echo $temp_consult_id . ', ' . $mode . ', "", "", "", "", ""'; ?>);'><?php echo EXAM_TYPE; ?></a>
+			    	<a id="exam_type_title_link" class="left_title5 hidden" onclick='examMapClick(<?php echo '"' . $consult_id . '", ' . $mode . ', "", "", "", "", ""'; ?>);'><?php echo EXAM_TYPE; ?></a>
 		  			<ul id="exam_list" class="list-group"></ul>
 		  			<div id="exam_form_stuff" class="hidden">
 		  				<div id="other_exam_div" class="hidden">
@@ -2011,15 +2011,15 @@ var php_followup_map = <?php echo $json_followup_map; ?>;
 							if($followup && isset($followup['is_needed'])) {
 								$is_needed = $followup['is_needed'];
 								if($is_needed == BOOLEAN_FALSE) {
-									echo "<input id='is_needed_input_yes' type='radio' name='is_needed_input' value='yes'><label for='is_needed_input_yes'>Yes</label>";
-									echo "<input id='is_needed_input_no' type='radio' name='is_needed_input' value='no' checked='checked'><label for='is_needed_input_no'>No</label>";
+									echo "<input id='is_needed_input_yes' type='radio' name='is_needed_input' value='yes'><label for='is_needed_input_yes'>" . YES . "</label>";
+									echo "<input id='is_needed_input_no' type='radio' name='is_needed_input' value='no' checked='checked'><label for='is_needed_input_no'>" . NO . "</label>";
 								} else if ($is_needed == BOOLEAN_TRUE) {
-									echo "<input id='is_needed_input_yes' type='radio' name='is_needed_input' value='yes' checked='checked'><label for='is_needed_input_yes'>Yes</label>";
-									echo "<input id='is_needed_input_no' type='radio' name='is_needed_input' value='no'><label for='is_needed_input_no'>No</label>";
+									echo "<input id='is_needed_input_yes' type='radio' name='is_needed_input' value='yes' checked='checked'><label for='is_needed_input_yes'>" . YES . "</label>";
+									echo "<input id='is_needed_input_no' type='radio' name='is_needed_input' value='no'><label for='is_needed_input_no'>" . NO . "</label>";
 								}
 							} else {
-								echo "<input id='is_needed_input_yes' type='radio' name='is_needed_input' value='yes'><label for='is_needed_input_yes'>Yes</label>";
-								echo "<input id='is_needed_input_no' type='radio' name='is_needed_input' value='no'><label for='is_needed_input_no'>No</label>";
+								echo "<input id='is_needed_input_yes' type='radio' name='is_needed_input' value='yes'><label for='is_needed_input_yes'>" . YES . "</label>";
+								echo "<input id='is_needed_input_no' type='radio' name='is_needed_input' value='no'><label for='is_needed_input_no'>" . NO . "</label>";
 							}
 			?>
 						</form>

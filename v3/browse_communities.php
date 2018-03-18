@@ -7,7 +7,7 @@
 	if($no_communities) {
 		$db->insertBaseCommunities();
 	} 
-
+	/*
 	if(isset($_GET['show_alert'])) {
 		$show_alert = $_GET['show_alert'];
 		if($show_alert == 2) {
@@ -16,7 +16,7 @@
 			echo '</script>';
 		}
 	}
-
+	*/
 
 ?>
 

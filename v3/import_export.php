@@ -9,10 +9,10 @@
 	$current_export_dir = "";
 	if(isset($_GET['importFile'])) {
 		$import_file = $_GET['importFile'];
-		$db->importData($import_file);
+		$db->importData($import_file, $lang);
 	} else if(isset($_GET['exportFile'])) {
 		$export_file = $_GET['exportFile'];
-		$db->exportData($export_file);
+		$db->exportData($export_file, $lang);
 	} else if (isset($_GET['import'])) {
 		$current_import_dir = $_GET['import'];
 	} else if (isset($_GET['export'])) {
@@ -35,7 +35,7 @@
 
 	<div id="link_row" class="row">
 		<div class="col-xs-12">
-			<a id="back_link" onclick="backClick();">Back to Main Page</a>
+			<a id="back_link" onclick="backClick();"><?php echo BACK_TO_HOME_PAGE; ?></a>
 		</div>
 	</div>
 

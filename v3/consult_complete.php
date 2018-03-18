@@ -610,7 +610,7 @@
 
 	<div id="button_row" class="row">
 		<div id="button_col" class="col-xs-12">
-			<button class="consult_button" type="button" onclick="editClick(<?php echo "'" . $consult_id . "', '" . $mode . "'"; ?>);"><?php echo EDIT_CAPS; ?></button>
+			<button class="consult_button" type="button" onclick="editClick(<?php echo "'" . $consult_id . "', '" . $mode . "', '" . $consult_datetime_completed . "'"; ?>);"><?php echo EDIT_CAPS; ?></button>
 		</div>
 	</div>
 
@@ -649,8 +649,14 @@ function backClick(mode, patient_id) {
 	window.location.href = "profile.php?mode=" + mode + "&patient_id=" + patient_id + lang_text;
 }
 
-function editClick(consult_id, mode) {
-	$("#myEditModal").modal('show');
+function editClick(consult_id, mode, datetime_completed) {
+	var time_difference_seconds = getTimeDifferenceInSeconds(datetime_completed, getCurrentDateTime());
+	if(time_difference_seconds < 3600) { //1 hour
+		var lang_text = getLang(1);
+		window.location.href = "consult_complete.php?edit_code=" + edit_code + "&mode=" + mode + "&consult_id=" + consult_id + lang_text;
+	} else {
+		$("#myEditModal").modal('show');
+	}
 }
 
 function editSubmitClick(consult_id, mode) {

@@ -1,0 +1,1 @@
+www-data ALL =NOPASSWD: /usr/local/bin/emr_import.sh, /usr/local/bin/emr_export.sh

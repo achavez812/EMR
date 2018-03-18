@@ -574,7 +574,13 @@ const TREATMENT_MAPPING = [
 	"51" => "Oral Antibiotic: Trim/Sulfa",
 	"52" => "Prenatal Vitamins",
 	"53" => "Adult Vitamins",
-	"54" => "Child Vitamins"
+	"54" => "Child Vitamins",
+	"55" => "Enalapril",
+        "56" => "Captopril",
+        "57" => "Amlodipina",
+        "58" => "Nifedipina",
+        "59" => "Losartan",
+        "60" => "Furosemida"
 ];
 
 define("PRN", "PRN");

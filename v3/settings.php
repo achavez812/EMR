@@ -105,13 +105,13 @@ var php_group_mapping = <?php echo $json_group_mapping; ?>;
 	<div class="row consult_row" >
 		<div class="col-xs-12">
 			<ul class="list-group">
-				<li class="list-group-item" onclick="userManagementClick(<?php echo $user_id; ?>);">
+				<li class="list-group-item" onclick="userManagementClick(<?php echo '\'' . $user_id . '\''; ?>);">
 					<?php echo USER_MANAGAMENT; ?>
 				</li>
-				<li class="list-group-item" onclick="defaultConsultInformationClick(<?php echo $user_id; ?>);">
+				<li class="list-group-item" onclick="defaultConsultInformationClick(<?php echo '\'' .  $user_id . '\''; ?>);">
 					<?php echo DEFAULT_CONSULT_INFORMATION; ?>
 				</li>
-				<li class="list-group-item" onclick="consultEditCodeClick(<?php echo $user_id; ?>);">
+				<li class="list-group-item" onclick="consultEditCodeClick(<?php echo '\'' .  $user_id . '\''; ?>);">
 					<?php echo CONSULT_EDIT_CODE; ?>
 				</li>
 			</ul>

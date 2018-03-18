@@ -3,7 +3,7 @@
 
 <?php
 	require_once 'include/include.php';
-
+	/*
 	if(isset($_GET['show_alert'])) {
 		$show_alert = $_GET['show_alert'];
 		if($show_alert == 2) {
@@ -12,7 +12,7 @@
 			echo '</script>';
 		}
 	}
-
+	*/
 	$filter_option = FILTER_OPTION_DUE_ALL;
 	if(isset($_GET['filter_option'])) {
 		$filter_option = $_GET['filter_option'];

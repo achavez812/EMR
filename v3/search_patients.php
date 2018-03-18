@@ -196,7 +196,7 @@
 function backClick(community_name, mode, redirect) {
 	var lang_text = getLang(1);
 	if(redirect == 2) {
-		window.location.href = "browse_patients?mode=" + mode + "&community_name=" + community_name + lang_text; 
+		window.location.href = "browse_patients.php?mode=" + mode + "&community_name=" + community_name + lang_text; 
 	} else if (redirect == 4) {
 		window.location.href = "triage_intake_patients.php?mode=" + mode + lang_text; 
 	} else if (redirect == 5) {

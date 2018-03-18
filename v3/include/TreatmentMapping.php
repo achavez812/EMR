@@ -23,6 +23,12 @@ class TreatmentMapping {
 		"6"
 	];
 	private $hypertension_treatment_array = [
+		"55",
+		"56",
+		"57",
+		"58",
+		"59",
+		"60",
 		"7"
 	];
 
